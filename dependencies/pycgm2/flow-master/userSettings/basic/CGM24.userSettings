@@ -1,0 +1,107 @@
+#CGM24 settings - version 1.0.0
+
+#-------------------------------------------------------------------------------
+SubjectInfo:
+  Ipp: "000"
+  Name:
+  FirstName:
+  Dob:
+
+#-------------------------------------------------------------------------------
+VisitInfo:
+  Date:
+  SessionNumber: 1
+  Age:
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+ExamInfo:
+  Goal : STANDARD
+  Comments:
+#-------------------------------------------------------------------------------
+MP:
+    Required:
+        Bodymass: 0
+        Height: 0
+        LeftLegLength: 0
+        RightLegLength: 0
+        LeftKneeWidth: 0
+        RightKneeWidth: 0
+        LeftAnkleWidth: 0
+        RightAnkleWidth: 0
+        LeftSoleDelta: 0
+        RightSoleDelta: 0
+        LeftShoulderOffset: 0
+        LeftElbowWidth: 0
+        LeftWristWidth: 0
+        LeftHandThickness: 0
+        RightShoulderOffset: 0
+        RightElbowWidth: 0
+        RightWristWidth: 0
+        RightHandThickness: 0
+    Optional:
+        InterAsisDistance: 0
+        LeftAsisTrocanterDistance: 0
+        LeftTibialTorsion: 0
+        LeftThighRotation: 0
+        LeftShankRotation: 0
+        RightAsisTrocanterDistance: 0
+        RightTibialTorsion: 0
+        RightThighRotation: 0
+        RightShankRotation: 0
+        LeftKneeFuncCalibrationOffset: 0
+        RightKneeFuncCalibrationOffset: 0
+
+
+Global:
+    MarkerDiameter: 14
+    PointSuffix:
+    EnableIK:
+
+
+Calibration:
+  - ID: 1
+    StaticTrial: static.c3d
+    LeftFlatFoot: True
+    RightFlatFoot: True
+    HeadFlat: True
+
+  - ID: 2
+    StaticTrial: static.c3d
+    LeftFlatFoot: True
+    RightFlatFoot: True
+    HeadFlat: True
+
+
+Fitting:
+    Trials:
+        - File: gait.c3d
+          CalibrationID: 1
+          Mfpa: LRXX
+          ConditionId: Condition1
+          Emg: True
+
+Emg:
+  Trials:
+    - File: gait.c3d
+      ConditionId: Condition2
+
+#-------------------------------------------------------------------------------
+Protocol:
+  ResearchProtocol:
+
+  Conditions:
+    - ConditionID : Condition1
+      Context : STANDARD
+      ContextComments:
+      Task:
+      Shoes:
+      Orthosis:
+      ExternalAid:
+      PersonalAid:
+      NerveBlock:
+      Assessor:
+      EmgReferenceConditionID:
+      EmgRepresentativeTrial: gait2.c3d
+
+#-------------------------------------------------------------------------------

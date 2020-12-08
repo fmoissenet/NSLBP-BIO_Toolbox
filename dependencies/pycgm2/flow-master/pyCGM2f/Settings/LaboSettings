@@ -1,0 +1,10 @@
+#SubjectInfo - VisitInfo - ExamInfo overloading
+
+Filename: CGA.xlsx
+Sheet : Cover
+Ipp: B3
+Name: B4
+FirstName : B5
+Age: B7
+Goal: B22
+Comments: B23

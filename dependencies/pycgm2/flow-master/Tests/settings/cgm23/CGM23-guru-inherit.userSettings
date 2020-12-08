@@ -1,0 +1,157 @@
+#CGM23 settings - version 1.0.0
+
+#-------------------------------------------------------------------------------
+SubjectInfo:
+  Ipp: 021251053
+  Name: QUATREVEAUX
+  FirstName: Rene Pierre
+  Dob: 30/01/1976
+
+#-------------------------------------------------------------------------------
+VisitInfo:
+  Date: 27/05/2020
+  SessionNumber: 1
+  Age: 44
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+ExamInfo:
+  Goal : Bloc Nerveux
+  Comments:
+#-------------------------------------------------------------------------------
+MP:
+    Required:
+        Bodymass: 74
+        Height: 1720
+        LeftLegLength: 835
+        RightLegLength: 840
+        LeftKneeWidth: 110
+        RightKneeWidth: 96
+        LeftAnkleWidth: 71
+        RightAnkleWidth: 73
+        LeftSoleDelta: 0
+        RightSoleDelta: 0
+        LeftShoulderOffset: 0
+        LeftElbowWidth: 0
+        LeftWristWidth: 0
+        LeftHandThickness: 0
+        RightShoulderOffset: 0
+        RightElbowWidth: 0
+        RightWristWidth: 0
+        RightHandThickness: 0
+    Optional:
+        InterAsisDistance: 0
+        LeftAsisTrocanterDistance: 0
+        LeftTibialTorsion: 0
+        LeftThighRotation: 0
+        LeftShankRotation: 0
+        RightAsisTrocanterDistance: 0
+        RightTibialTorsion: 0
+        RightThighRotation: 0
+        RightShankRotation: 0
+        LeftKneeFuncCalibrationOffset: 0
+        RightKneeFuncCalibrationOffset: 0
+
+
+Global:
+    MarkerDiameter: 14
+    PointSuffix:
+    EnableIK:
+
+
+Calibration:
+  - ID: 1
+    StaticTrial: QUATREVAUX Rene Pierre Cal 02.c3d
+    LeftFlatFoot: True
+    RightFlatFoot: True
+    HeadFlat: True
+    MP: Inherit
+    Translators: Inherit
+    HJC: Inherit
+    Weights: Inherit
+
+
+Fitting:
+    Trials:
+        - File: 20200527-QRP-PRE-S-NNCsN dyn 06.c3d
+          CalibrationID: 1
+          Mfpa: XXX
+          ConditionId: Condition1
+          Emg: True
+          Translators: Inherit
+          Weights: Inherit
+
+        - File: 20200527-QRP-POST-S-NNCsN dyn 12.c3d
+          CalibrationID: 1
+          Mfpa: XXX
+          ConditionId: Condition2
+          Emg: True
+          Translators: Inherit
+          Weights: Inherit
+
+
+        - File: 20200527-QRP-POST2-S-NNCsN dyn 16.c3d
+          CalibrationID: 1
+          Mfpa: XXX
+          ConditionId: Condition3
+          Emg: True
+          Translators: Inherit
+          Weights: Inherit
+
+
+
+Emg:
+  Trials:
+    #- File: gait.c3d
+    #  ConditionId: Condition1
+
+#-------------------------------------------------------------------------------
+Protocol:
+  ResearchProtocol:
+
+  Conditions:
+    - ConditionID : Condition1
+      Context : PRE BLOC
+      ContextComments:
+      Task:
+      Shoes:
+      Orthosis:
+      ExternalAid: Canne Simple
+      PersonalAid:
+      Comments:
+      Assessor:
+      EmgReferenceConditionID: Condition1
+      EmgRepresentativeTrial: 20200527-QRP-PRE-S-NNCsN dyn 06.c3d
+      EmgSettings: Inherit
+      MomentProjection: Inherit
+
+    - ConditionID : Condition2
+      Context : BLOC RFd
+      ContextComments:
+      Task:
+      Shoes:
+      Orthosis:
+      ExternalAid: Canne Simple
+      PersonalAid:
+      Comments:
+      Assessor:
+      EmgReferenceConditionID: Condition1
+      EmgRepresentativeTrial: 20200527-QRP-POST-S-NNCsN dyn 12.c3d
+      EmgSettings: Inherit
+      MomentProjection: Inherit
+
+    - ConditionID : Condition3
+      Context : BLOC TAd
+      ContextComments:
+      Task:
+      Shoes:
+      Orthosis:
+      ExternalAid: Canne Simple
+      PersonalAid:
+      Comments:
+      Assessor:
+      EmgReferenceConditionID: Condition1
+      EmgRepresentativeTrial: 20200527-QRP-POST2-S-NNCsN dyn 16.c3d
+      EmgSettings: Inherit
+      MomentProjection: Inherit
+#-------------------------------------------------------------------------------

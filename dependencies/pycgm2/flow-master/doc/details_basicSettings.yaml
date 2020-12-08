@@ -1,0 +1,129 @@
+#CGM1 settings - version 1.0.0
+
+#-------------------------------------------------------------------------------
+SubjectInfo:
+  Ipp:   000 # [string]-REQUIRED- identification number
+  Name:      # [string]
+  FirstName: # [string]
+  Dob:       # [string] date of birth
+
+#-------------------------------------------------------------------------------
+VisitInfo:
+  Date:          # [string]
+  SessionNumber: # [string]
+  Age:           # [int]
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+ExamInfo:
+  Goal :         # [string]
+  Comments:      # [string]
+#-------------------------------------------------------------------------------
+MP:
+    Required:
+        Bodymass: 0              # [double] - REQUIRED- unit : kg - default 0
+        Height: 0                # [double] - REQUIRED- unit : mm - default 0
+        LeftLegLength: 0         # [double] - REQUIRED- unit : mm  - default 0
+        RightLegLength: 0        # [double] - REQUIRED- unit : mm - default 0
+        LeftKneeWidth: 0         # [double] - REQUIRED- unit : mm  - default 0
+        RightKneeWidth: 0        # [double] - REQUIRED- unit : mm - default 0
+        LeftAnkleWidth: 0        # [double] - REQUIRED- unit : mm - default 0
+        RightAnkleWidth: 0       # [double] - REQUIRED- unit : mm - default 0
+        LeftSoleDelta: 0         # [double] - REQUIRED- unit : mm  - default 0
+        RightSoleDelta: 0        # [double] - REQUIRED- unit : mm - default 0
+        LeftShoulderOffset: 0    # [double] - REQUIRED- unit : mm - default 0
+        LeftElbowWidth: 0        # [double] - REQUIRED- unit : mm - default 0
+        LeftWristWidth: 0        # [double] - REQUIRED- unit : mm - default 0
+        LeftHandThickness: 0     # [double] - REQUIRED- unit : mm - default 0
+        RightShoulderOffset: 0   # [double] - REQUIRED- unit : mm - default 0
+        RightElbowWidth: 0       # [double] - REQUIRED- unit : mm - default 0
+        RightWristWidth: 0       # [double] - REQUIRED- unit : mm - default 0
+        RightHandThickness: 0    # [double] - REQUIRED- unit : mm - default 0
+    Optional:
+        InterAsisDistance: 0              # [double] - unit : mm - default 0
+        LeftAsisTrocanterDistance: 0      # [double] - unit : mm - default 0
+        LeftTibialTorsion: 0              # [double] - unit : deg - default 0
+        LeftThighRotation: 0              # [double] - unit : deg - default 0
+        LeftShankRotation: 0              # [double] - unit : deg - default 0
+        RightAsisTrocanterDistance: 0     # [double] - unit : mm - default 0
+        RightTibialTorsion: 0             # [double] - unit : deg - default 0
+        RightThighRotation: 0             # [double] - unit : deg - default 0
+        RightShankRotation: 0             # [double] - unit : deg - default 0
+        LeftKneeFuncCalibrationOffset: 0  # [double] - unit : deg - default 0
+        RightKneeFuncCalibrationOffset: 0 # [double] - unit : deg - default 0
+
+
+Global:
+    MarkerDiameter: 14     # [double] - REQUIRED - unit : mm - default 14
+    PointSuffix:           # [string]
+
+
+Calibration:
+  - ID: 1                   # [string/int] - primary key identifying the calibration
+    StaticTrial: static.c3d # [string]
+    LeftFlatFoot: True      # [bool]
+    RightFlatFoot: True     # [bool]
+    HeadFlat: True          # [bool]
+
+# In presence of a second static ( due to a marker repositionning for instance, you can add this line with the new ID)
+  - ID: 2
+    StaticTrial: static.c3d
+    LeftFlatFoot: True
+    RightFlatFoot: True
+    HeadFlat: True
+
+# the Fitting section only refers to files containing 3d marker position dealt with the CGM#i
+Fitting:
+    Trials:
+        - File: gait.c3d               # [string]- REQUIRED
+          CalibrationID: 1             # [string/int]- REQUIRED - reference to the calibration key
+          Mfpa: XLR                    # [string]- REQUIRED- manual force plate assignement (here FP#1: Invalid - FP#2: Left - FP#3: Right)
+          ConditionId: Condition1      # [string/int]- REQUIRED-  reference to the condition key ( see below)
+          Emg: True                    # [bool]- REQUIRED - indicate if trial contains EMG also
+
+        # for another trial, you can add the lines below
+        - File: gait 2.c3d
+          CalibrationID: 2             # NOTE : this trial points the CalibrationID #2
+          Mfpa: XXX
+          ConditionId: Condition1
+          Emg: True
+
+
+# the EMG section only refers to files containing EMG only.
+Emg:
+  Trials:
+    - File: gait.c3d             # [string]- REQUIRED
+      ConditionId: Condition2    # [string/int]- REQUIRED-  reference to the condition key ( see below)
+
+#-------------------------------------------------------------------------------
+Protocol:
+  ResearchProtocol:              # [string]- REQUIRED-
+
+  # a Condition is a combinaison of factor characterizing the walking measurement
+  Conditions:
+    - ConditionID : Condition1  # [string/int]- REQUIRED- primary key identifying the condition
+      Context : STANDARD        # [string]
+      ContextComments:          # [string]
+      Task: Spontaneous         # [string]
+      Shoes: Barefoot           # [string]
+      Orthosis:                 # [string]
+      ExternalAid:              # [string]
+      PersonalAid:              # [string]
+      NerveBlock:               # [string]
+      Assessor:                 # [string]
+      EmgReferenceConditionID:  # [string] - reference to another condition for normalizing emg in amplitude
+      EmgRepresentativeTrial: gait.c3d # [string] - filename of the representrative emg trial
+
+    # you can have another condition ( slow-gait with shoes on). you can add the folowing line
+    - ConditionID : Condition2
+      Context : STANDARD
+      ContextComments:
+      Task: Slow gait
+      Shoes: shoes
+      Orthosis:
+      ExternalAid:
+      PersonalAid:
+      NerveBlock:
+      Assessor:
+      EmgReferenceConditionID: Condition1  # [string] - emg normalisation from emg measurement of the condition 1
+      EmgRepresentativeTrial: gait2.c3d #

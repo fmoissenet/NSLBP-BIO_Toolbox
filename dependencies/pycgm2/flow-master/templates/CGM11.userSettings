@@ -1,0 +1,108 @@
+#CGM11 settings - version 1.0.0
+
+#-------------------------------------------------------------------------------
+SubjectInfo:
+  Ipp: "{{ data["Patient"]["PatientID"] }}"
+  Name:
+  FirstName:
+  Dob:
+
+#-------------------------------------------------------------------------------
+VisitInfo:
+  Date: {{ data["Visit"]["Date"] }}
+  SessionNumber: {{ data["Visit"]["SessionID"] }}
+  Age: {{ data["Visit"]["Age"] }}
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+ExamInfo:
+  Goal :
+  Comments:
+#-------------------------------------------------------------------------------
+MP:
+    Required:
+        Bodymass: {{ data["Mp"]["Bodymass"] }}
+        Height: {{ data["Mp"]["Height"] }}
+        LeftLegLength: {{ data["Mp"]["LeftLegLength"] }}
+        RightLegLength: {{ data["Mp"]["RightLegLength"] }}
+        LeftKneeWidth: {{ data["Mp"]["LeftKneeWidth"] }}
+        RightKneeWidth: {{ data["Mp"]["RightKneeWidth"] }}
+        LeftAnkleWidth: {{ data["Mp"]["LeftAnkleWidth"] }}
+        RightAnkleWidth: {{ data["Mp"]["RightAnkleWidth"] }}
+        LeftSoleDelta: {{ data["Mp"]["LeftSoleDelta"] }}
+        RightSoleDelta: {{ data["Mp"]["RightSoleDelta"] }}
+        LeftShoulderOffset: {{ data["Mp"]["LeftShoulderOffset"] }}
+        LeftElbowWidth: {{ data["Mp"]["LeftElbowWidth"] }}
+        LeftWristWidth: {{ data["Mp"]["LeftWristWidth"] }}
+        LeftHandThickness: {{ data["Mp"]["LeftHandThickness"] }}
+        RightShoulderOffset: {{ data["Mp"]["RightShoulderOffset"] }}
+        RightElbowWidth: {{ data["Mp"]["RightElbowWidth"] }}
+        RightWristWidth: {{ data["Mp"]["RightWristWidth"] }}
+        RightHandThickness: {{ data["Mp"]["RightHandThickness"] }}
+    Optional:
+        InterAsisDistance: 0
+        LeftAsisTrocanterDistance: 0
+        LeftTibialTorsion: 0
+        LeftThighRotation: 0
+        LeftShankRotation: 0
+        RightAsisTrocanterDistance: 0
+        RightTibialTorsion: 0
+        RightThighRotation: 0
+        RightShankRotation: 0
+        LeftKneeFuncCalibrationOffset: 0
+        RightKneeFuncCalibrationOffset: 0
+
+
+Global:
+    MarkerDiameter: 14
+    PointSuffix:
+
+
+Calibration:
+  {% for it in data['Calibration'] %}
+  - ID: {{ it[0] }}
+    StaticTrial: {{ it[1] }}
+    LeftFlatFoot: {{ it[2] }}
+    RightFlatFoot: {{ it[3] }}
+    HeadFlat: True
+
+  {% endfor %}
+
+Fitting:
+    Trials:
+      {% for it in data['Fitting'] %}
+      - File: {{ it[0] }}
+        CalibrationID: {{ it[1] }}
+        Mfpa: {{ it[2] }}
+        ConditionId: {{ it[3] }}
+        Emg: True
+
+      {% endfor %}
+
+Emg:
+    Trials:
+      {% for it in data['Emg'] %}
+      - File: {{ it[0] }}
+        ConditionId: {{ it[1] }}
+      {% endfor %}
+
+#-------------------------------------------------------------------------------
+Protocol:
+  ResearchProtocol:
+
+  Conditions:
+    {% for it in data['Conditions'] %}
+    - ConditionID : {{ it["ConditionID"] }}
+      Context : {{ it["Context"] }}
+      ContextComments:
+      NerveBlock : {{ it["NerveBlock"] }}
+      Task: {{ it["Task"] }}
+      Shoes: {{ it["Shoes"] }}
+      Orthosis: {{ it["ProthesisOrthosis"] }}
+      ExternalAid: {{ it["ExternalAid"] }}
+      PersonalAid: {{ it["PersonalAid"] }}
+      Comments:
+      Assessor:
+      EmgReferenceConditionID: {{ it["EmgReferenceConditionID"] }}
+      EmgRepresentativeTrial: {{ it["EmgRepresentativeTrial"] }}
+    {% endfor %}
