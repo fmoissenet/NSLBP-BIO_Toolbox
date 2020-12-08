@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MokkaModelVisualConfiguration name="NSLBP-BIO-Model" version="1.0">
+    <MarkersList>
+        <Marker label="RASI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RILC" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RPSI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LPSI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LILC" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LASI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="S1" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RGTR" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RTHI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RKNE" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RKNM" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RFAX" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RTTA" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RTIB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RANK" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RMED" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RHEE" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RFMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RSMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RVMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LGTR" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LTHI" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LKNE" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LFAX" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LTTA" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LTIB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LANK" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LMED" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LHEE" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LFMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LSMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LVMH" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="C7" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T2" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T4" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T6" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T8" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T10" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="T12" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="L1" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="L3" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="L5" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="CLAV" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RSHO" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RELB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RWRA" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RWRB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RHAN" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RBAK" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LSHO" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LELB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LWRA" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LWRB" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LHAN" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RFHD" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="RBHD" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LBHD" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LFHD" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="STRN" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+        <Marker label="LKNM" radius="8" colorR="0.239216" colorG="0.239216" colorB="0.239216" visible="1" trajectory="0"/>
+    </MarkersList>
+    <SegmentsList>
+        <Segment label="Pelvis" colorR="0" colorG="0.666667" colorB="1" visible="1" surface="1" description="">
+            <Point label="RASI"/>
+            <Point label="RILC"/>
+            <Point label="RPSI"/>
+            <Point label="LPSI"/>
+            <Point label="LILC"/>
+            <Point label="LASI"/>
+            <Point label="S1"/>
+            <Link pt1="RASI" pt2="RILC"/>
+            <Link pt1="RASI" pt2="RPSI"/>
+            <Link pt1="RILC" pt2="RPSI"/>
+            <Link pt1="RPSI" pt2="LPSI"/>
+            <Link pt1="RPSI" pt2="S1"/>
+            <Link pt1="LPSI" pt2="LILC"/>
+            <Link pt1="LPSI" pt2="LASI"/>
+            <Link pt1="LPSI" pt2="S1"/>
+            <Link pt1="LILC" pt2="LASI"/>
+            <Face pt1="RASI" pt2="RILC" pt3="RPSI"/>
+            <Face pt1="LPSI" pt2="LILC" pt3="LASI"/>
+            <Face pt1="LPSI" pt2="RPSI" pt3="S1"/>
+        </Segment>
+        <Segment label="R_Thigh" colorR="0" colorG="0.666667" colorB="0" visible="1" surface="1" description="">
+            <Point label="RGTR"/>
+            <Point label="RTHI"/>
+            <Point label="RKNE"/>
+            <Point label="RKNM"/>
+            <Link pt1="RGTR" pt2="RTHI"/>
+            <Link pt1="RGTR" pt2="RKNE"/>
+            <Link pt1="RTHI" pt2="RKNE"/>
+            <Link pt1="RKNE" pt2="RKNM"/>
+            <Face pt1="RGTR" pt2="RTHI" pt3="RKNE"/>
+        </Segment>
+        <Segment label="R_Shank" colorR="0" colorG="0.666667" colorB="0" visible="1" surface="1" description="">
+            <Point label="RFAX"/>
+            <Point label="RTTA"/>
+            <Point label="RTIB"/>
+            <Point label="RANK"/>
+            <Point label="RMED"/>
+            <Link pt1="RFAX" pt2="RTTA"/>
+            <Link pt1="RFAX" pt2="RTIB"/>
+            <Link pt1="RFAX" pt2="RANK"/>
+            <Link pt1="RTIB" pt2="RANK"/>
+            <Link pt1="RANK" pt2="RMED"/>
+            <Face pt1="RFAX" pt2="RANK" pt3="RTIB"/>
+        </Segment>
+        <Segment label="R_Foot" colorR="0" colorG="0.666667" colorB="0" visible="1" surface="1" description="">
+            <Point label="RHEE"/>
+            <Point label="RFMH"/>
+            <Point label="RSMH"/>
+            <Point label="RVMH"/>
+            <Link pt1="RHEE" pt2="RFMH"/>
+            <Link pt1="RHEE" pt2="RVMH"/>
+            <Link pt1="RFMH" pt2="RSMH"/>
+            <Link pt1="RFMH" pt2="RVMH"/>
+            <Link pt1="RSMH" pt2="RVMH"/>
+            <Face pt1="RSMH" pt2="RVMH" pt3="RFMH"/>
+            <Face pt1="RVMH" pt2="RFMH" pt3="RHEE"/>
+        </Segment>
+        <Segment label="L_Thigh" colorR="0.666667" colorG="0" colorB="0" visible="1" surface="1" description="">
+            <Point label="LGTR"/>
+            <Point label="LTHI"/>
+            <Point label="LKNE"/>
+            <Point label="LKNM"/>
+            <Link pt1="LGTR" pt2="LTHI"/>
+            <Link pt1="LGTR" pt2="LKNE"/>
+            <Link pt1="LTHI" pt2="LKNE"/>
+            <Link pt1="LKNE" pt2="LKNM"/>
+            <Face pt1="LKNE" pt2="LGTR" pt3="LTHI"/>
+        </Segment>
+        <Segment label="L_Shank" colorR="0.666667" colorG="0" colorB="0" visible="1" surface="1" description="">
+            <Point label="LFAX"/>
+            <Point label="LTTA"/>
+            <Point label="LTIB"/>
+            <Point label="LANK"/>
+            <Point label="LMED"/>
+            <Link pt1="LFAX" pt2="LTTA"/>
+            <Link pt1="LFAX" pt2="LTIB"/>
+            <Link pt1="LFAX" pt2="LANK"/>
+            <Link pt1="LTIB" pt2="LANK"/>
+            <Link pt1="LANK" pt2="LMED"/>
+            <Face pt1="LFAX" pt2="LTIB" pt3="LANK"/>
+        </Segment>
+        <Segment label="L_Foot" colorR="0.666667" colorG="0" colorB="0" visible="1" surface="1" description="">
+            <Point label="LHEE"/>
+            <Point label="LFMH"/>
+            <Point label="LSMH"/>
+            <Point label="LVMH"/>
+            <Link pt1="LHEE" pt2="LFMH"/>
+            <Link pt1="LHEE" pt2="LVMH"/>
+            <Link pt1="LFMH" pt2="LSMH"/>
+            <Link pt1="LFMH" pt2="LVMH"/>
+            <Link pt1="LSMH" pt2="LVMH"/>
+            <Face pt1="LSMH" pt2="LFMH" pt3="LVMH"/>
+            <Face pt1="LHEE" pt2="LVMH" pt3="LFMH"/>
+        </Segment>
+        <Segment label="Lumbar" colorR="0" colorG="0.666667" colorB="1" visible="1" surface="0" description="">
+            <Point label="L1"/>
+            <Point label="L3"/>
+            <Point label="L5"/>
+            <Link pt1="L1" pt2="L3"/>
+            <Link pt1="L3" pt2="L5"/>
+        </Segment>
+        <Segment label="Thorax" colorR="0" colorG="0.666667" colorB="1" visible="1" surface="1" description="">
+            <Point label="C7"/>
+            <Point label="T2"/>
+            <Point label="T4"/>
+            <Point label="T6"/>
+            <Point label="T8"/>
+            <Point label="T10"/>
+            <Point label="T12"/>
+            <Point label="CLAV"/>
+            <Point label="STRN"/>
+            <Link pt1="C7" pt2="T2"/>
+            <Link pt1="C7" pt2="T10"/>
+            <Link pt1="C7" pt2="CLAV"/>
+            <Link pt1="T2" pt2="T4"/>
+            <Link pt1="T4" pt2="T6"/>
+            <Link pt1="T6" pt2="T8"/>
+            <Link pt1="T8" pt2="T10"/>
+            <Link pt1="T10" pt2="T12"/>
+            <Link pt1="T10" pt2="CLAV"/>
+            <Link pt1="T10" pt2="STRN"/>
+            <Link pt1="CLAV" pt2="STRN"/>
+            <Face pt1="C7" pt2="CLAV" pt3="T10"/>
+            <Face pt1="CLAV" pt2="STRN" pt3="T10"/>
+        </Segment>
+        <Segment label="Head" colorR="0" colorG="0.666667" colorB="1" visible="1" surface="1" description="">
+            <Point label="RFHD"/>
+            <Point label="RBHD"/>
+            <Point label="LBHD"/>
+            <Point label="LFHD"/>
+            <Link pt1="RFHD" pt2="RBHD"/>
+            <Link pt1="RFHD" pt2="LBHD"/>
+            <Link pt1="RFHD" pt2="LFHD"/>
+            <Link pt1="RBHD" pt2="LBHD"/>
+            <Link pt1="RBHD" pt2="LFHD"/>
+            <Link pt1="LBHD" pt2="LFHD"/>
+            <Face pt1="LBHD" pt2="RBHD" pt3="LFHD"/>
+            <Face pt1="RFHD" pt2="RBHD" pt3="LBHD"/>
+            <Face pt1="LFHD" pt2="RFHD" pt3="RBHD"/>
+            <Face pt1="LFHD" pt2="RFHD" pt3="LBHD"/>
+        </Segment>
+        <Segment label="R_Arm" colorR="0" colorG="0.666667" colorB="0" visible="1" surface="1" description="">
+            <Point label="RSHO"/>
+            <Point label="RELB"/>
+            <Point label="RWRA"/>
+            <Point label="RWRB"/>
+            <Point label="RHAN"/>
+            <Point label="RBAK"/>
+            <Link pt1="RSHO" pt2="RELB"/>
+            <Link pt1="RELB" pt2="RWRA"/>
+            <Link pt1="RELB" pt2="RWRB"/>
+            <Link pt1="RWRA" pt2="RWRB"/>
+            <Link pt1="RWRA" pt2="RHAN"/>
+            <Link pt1="RWRB" pt2="RHAN"/>
+            <Face pt1="RWRB" pt2="RHAN" pt3="RWRA"/>
+            <Face pt1="RWRA" pt2="RWRB" pt3="RELB"/>
+        </Segment>
+        <Segment label="L_Arm" colorR="0.666667" colorG="0" colorB="0" visible="1" surface="1" description="">
+            <Point label="LSHO"/>
+            <Point label="LELB"/>
+            <Point label="LWRA"/>
+            <Point label="LWRB"/>
+            <Point label="LHAN"/>
+            <Link pt1="LSHO" pt2="LELB"/>
+            <Link pt1="LELB" pt2="LWRA"/>
+            <Link pt1="LELB" pt2="LWRB"/>
+            <Link pt1="LWRA" pt2="LWRB"/>
+            <Link pt1="LWRA" pt2="LHAN"/>
+            <Link pt1="LWRB" pt2="LHAN"/>
+            <Face pt1="LWRB" pt2="LHAN" pt3="LWRA"/>
+            <Face pt1="LWRB" pt2="LWRA" pt3="LELB"/>
+        </Segment>
+    </SegmentsList>
+</MokkaModelVisualConfiguration>
