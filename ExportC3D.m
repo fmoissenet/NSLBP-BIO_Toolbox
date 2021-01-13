@@ -27,19 +27,39 @@ btkFile = btkNewAcquisition();
 btkSetFrequency(btkFile,Trial.fmarker);
 btkSetFrameNumber(btkFile,Trial.n1);
 btkSetPointsUnit(btkFile,'marker','m');
+btkSetAnalogSampleNumberPerFrame(btkFile,10);
 
-% Append marker trajectories
-for i = 1:size(Trial.Marker,2)
-    if ~isempty(Trial.Marker(i).Trajectory.smooth)
-        btkAppendPoint(btkFile,'marker',Trial.Marker(i).label,Trial.Marker(i).Trajectory.smooth);
-    else
-        btkAppendPoint(btkFile,'marker',Trial.Marker(i).label,zeros(Trial.n1,3));
+% Append events
+if ~isempty(Trial.Event)
+    for i = 1:size(Trial.Event,2)
+        for j = 1:size(Trial.Event(i).value,2)
+            Event = Trial.Event(i).value(1,j)/Trial.fmarker;
+            btkAppendEvent(btkFile,Trial.Event(i).label,Event,'');
+            clear Event;
+        end
     end
 end
 
-if strcmp(Trial.type,'Static') == 0
-    % Append 3D ground reactions
-    % Append EMG
+% Append marker trajectories
+if ~isempty(Trial.Marker)
+    for i = 1:size(Trial.Marker,2)
+        if ~isempty(Trial.Marker(i).Trajectory.smooth)
+            btkAppendPoint(btkFile,'marker',Trial.Marker(i).label,Trial.Marker(i).Trajectory.smooth);
+        else
+            btkAppendPoint(btkFile,'marker',Trial.Marker(i).label,zeros(Trial.n1,3));
+        end
+    end
+end
+
+% Append EMG signals
+if ~isempty(Trial.EMG)
+    for i = 1:size(Trial.EMG,2)
+        if ~isempty(Trial.EMG(i).Signal.norm)
+            btkAppendAnalog(btkFile,Trial.EMG(i).label,Trial.EMG(i).Signal.norm,'EMG signal (normalised)');
+        else
+            btkAppendAnalog(btkFile,Trial.EMG(i).label,Trial.EMG(i).Signal.smooth,'EMG signal (mV)');
+        end
+    end
 end
 
 % Append participant metadata
