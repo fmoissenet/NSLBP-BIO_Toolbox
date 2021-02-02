@@ -22,7 +22,7 @@
 
 function Trial = InitialiseEMGSignals(Trial,EMG)
 
-% Set markerset
+% Set EMGset
 EMGSet = {'R_RA','L_RA',...
           'R_EO','L_EO',...
           'R_LES','L_LES',...
@@ -44,19 +44,31 @@ trialList = {'Endurance_Ito','Endurance_Ito',...
 
 % Initialise EMGs
 for i = 1:length(EMGSet)
-    Trial.EMG(i).label            = EMGSet{i};
+    Trial.EMG(i).label              = EMGSet{i};
     if isfield(EMG,EMGSet{i})
-        Trial.EMG(i).Signal.raw    = EMG.(EMGSet{i});
-        Trial.EMG(i).Signal.filt   = [];
-        Trial.EMG(i).Signal.rect   = [];
-        Trial.EMG(i).Signal.smooth = [];
-        Trial.EMG(i).Signal.norm   = [];
+        Trial.EMG(i).Signal.raw     = EMG.(EMGSet{i});
+        Trial.EMG(i).Signal.filt    = [];
+        Trial.EMG(i).Signal.rect    = [];
+        Trial.EMG(i).Signal.smooth  = [];
+        Trial.EMG(i).Signal.norm    = [];
+        Trial.EMG(i).Signal.cycle   = []; %smooth
+        Trial.EMG(i).Signal.rcycle  = []; %smooth
+        Trial.EMG(i).Signal.lcycle  = []; %smooth
+        Trial.EMG(i).Signal.cyclen  = []; %norm
+        Trial.EMG(i).Signal.rcyclen = []; %norm
+        Trial.EMG(i).Signal.lcyclen = []; %norm
     else
-        Trial.EMG(i).Signal.raw    = [];
-        Trial.EMG(i).Signal.filt   = [];
-        Trial.EMG(i).Signal.rect   = [];
-        Trial.EMG(i).Signal.smooth = [];
-        Trial.EMG(i).Signal.norm   = [];
+        Trial.EMG(i).Signal.raw     = [];
+        Trial.EMG(i).Signal.filt    = [];
+        Trial.EMG(i).Signal.rect    = [];
+        Trial.EMG(i).Signal.smooth  = [];
+        Trial.EMG(i).Signal.norm    = [];
+        Trial.EMG(i).Signal.cycle   = []; %smooth
+        Trial.EMG(i).Signal.rcycle  = []; %smooth
+        Trial.EMG(i).Signal.lcycle  = []; %smooth
+        Trial.EMG(i).Signal.cyclen  = []; %norm
+        Trial.EMG(i).Signal.rcyclen = []; %norm
+        Trial.EMG(i).Signal.lcyclen = []; %norm
     end
     Trial.EMG(i).Processing.filt       = 'none';
     Trial.EMG(i).Processing.smooth     = 'none';

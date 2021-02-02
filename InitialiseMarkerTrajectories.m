@@ -109,11 +109,17 @@ for i = 1:length(markerSet)
         Trial.Marker(i).Trajectory.raw    = Marker.(markerSet{i})*1e-3; % Convert mm to m
         Trial.Marker(i).Trajectory.fill   = [];
         Trial.Marker(i).Trajectory.smooth = [];
+        Trial.Marker(i).Trajectory.cycle  = [];
+        Trial.Marker(i).Trajectory.rcycle = [];
+        Trial.Marker(i).Trajectory.lcycle = [];
         Trial.Marker(i).Trajectory.Gap    = [];
     else
         Trial.Marker(i).Trajectory.raw    = [];
         Trial.Marker(i).Trajectory.fill   = [];
         Trial.Marker(i).Trajectory.smooth = [];
+        Trial.Marker(i).Trajectory.cycle  = [];
+        Trial.Marker(i).Trajectory.rcycle = [];
+        Trial.Marker(i).Trajectory.lcycle = [];
         Trial.Marker(i).Trajectory.Gap    = [];
     end
     Trial.Marker(i).Processing.smooth     = 'none';

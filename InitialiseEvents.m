@@ -26,9 +26,11 @@ function Trial = InitialiseEvents(Trial,Event)
 EventSet = {'start','stop','start2','stop2','RHS','RTO','LHS','LTO'};
 
 % Initialise Events
+k = 1;
 for i = 1:length(EventSet)
     if isfield(Event,EventSet{i})
-        Trial.Event(i).label = EventSet{i};
-        Trial.Event(i).value = round(Event.(EventSet{i})*Trial.fmarker)-Trial.n0+1;
+        Trial.Event(k).label = EventSet{i};
+        Trial.Event(k).value = round(Event.(EventSet{i})*Trial.fmarker)-Trial.n0+1;
+        k                    = k+1;
     end
 end

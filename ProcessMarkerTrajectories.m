@@ -40,12 +40,22 @@ for i = 1:size(Trial.Marker,2)
     
     % Missing marker trajectory
     if isempty(Trial.Marker(i).Trajectory.raw)
-        Trial.Marker(i).Gap(1).frames         = 1:Trial.n1;
-        Trial.Marker(i).Gap(1).reconstruction = 'none';
-        Trial.Marker(i).smoothing             = 'none';
+        Trial.Marker(i).Trajectory.Gap(1).frames         = 1:Trial.n1;
+        Trial.Marker(i).Processing.Gap(1).reconstruction = 'none';
+        Trial.Marker(i).Processing.smooth                = 'none';
 
     % Marker trajectory with gaps
     elseif ~isempty(Trial.Marker(i).Trajectory.raw)
+        
+%         % Replace high accelerations by NaN
+%         threshold = 5e-4; % Empirically defined
+%         temp      = gradient(gradient(Trial.Marker(i).Trajectory.raw(:,1)));
+%         for j = 1:Trial.n1
+%             if abs(temp(j,1)) > threshold
+%                Trial.Marker(i).Trajectory.raw(j,:) = nan(1,3);
+%             end
+%         end
+%         clear threshold temp;
 
         % Replace [0 0 0] by NaN
         for j = 1:Trial.n1
@@ -102,7 +112,7 @@ if ~isempty(Static)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
                 if ~isempty(Trial.Marker(i).Trajectory.Gap)
                     for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
-                        Trial.Marker(i).Processing.Gap(j) = 'none';
+                        Trial.Marker(i).Processing.Gap(j).reconstruction = 'none';
                     end
                 end
             end
@@ -116,7 +126,7 @@ if ~isempty(Static)
         for i = 1:size(Trial.Marker,2)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
                 if ~isempty(Trial.Marker(i).Trajectory.Gap)
-                    for j = 1:size(Trial.Marker(i).Gap,2)
+                    for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
                         if size(Trial.Marker(i).Trajectory.Gap(j).frames,2) < fmethod.gapThreshold
                             if Trial.Marker(i).Trajectory.Gap(j).frames(1) > 1 && ...
                                Trial.Marker(i).Trajectory.Gap(j).frames(end) < Trial.n1
@@ -125,7 +135,7 @@ if ~isempty(Static)
                                 fillmissing(Trial.Marker(i).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(j).frames(1)-1: ...
                                                                             Trial.Marker(i).Trajectory.Gap(j).frames(end)+1,:),'linear');
                             end
-                            Trial.Marker(i).Processing.Gap(j) = 'linear';
+                            Trial.Marker(i).Processing.Gap(j).reconstruction = 'linear';
                         end
                     end
                 end
@@ -139,8 +149,8 @@ if ~isempty(Static)
     if strcmp(fmethod.type,'spline')
         for i = 1:size(Trial.Marker,2)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
-                if ~isempty(Trial.Marker(i).Gap)
-                    for j = 1:size(Trial.Marker(i).Gap,2)
+                if ~isempty(Trial.Marker(i).Trajectory.Gap)
+                    for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
                         if size(Trial.Marker(i).Trajectory.Gap(j).frames,2) < fmethod.gapThreshold
                             if Trial.Marker(i).Trajectory.Gap(j).frames(1) > 10 && ...
                                Trial.Marker(i).Trajectory.Gap(j).frames(end) < Trial.n1-9
@@ -149,7 +159,7 @@ if ~isempty(Static)
                                 fillmissing(Trial.Marker(i).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(j).frames(1)-10: ...
                                                                             Trial.Marker(i).Trajectory.Gap(j).frames(end)+10,:),'spline');
                             end
-                            Trial.Marker(i).Processing.Gap(j) = 'spline';
+                            Trial.Marker(i).Processing.Gap(j).reconstruction = 'spline';
                         end
                     end
                 end
@@ -163,8 +173,8 @@ if ~isempty(Static)
     if strcmp(fmethod.type,'pchip')
         for i = 1:size(Trial.Marker,2)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
-                if ~isempty(Trial.Marker(i).Gap)
-                    for j = 1:size(Trial.Marker(i).Gap,2)
+                if ~isempty(Trial.Marker(i).Trajectory.Gap)
+                    for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
                         if size(Trial.Marker(i).Trajectory.Gap(j).frames,2) < fmethod.gapThreshold
                             if Trial.Marker(i).Trajectory.Gap(j).frames(1) > 10 && ...
                                Trial.Marker(i).Trajectory.Gap(j).frames(end) < Trial.n1-9
@@ -173,7 +183,7 @@ if ~isempty(Static)
                                 fillmissing(Trial.Marker(i).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(j).frames(1)-10: ...
                                                                             Trial.Marker(i).Trajectory.Gap(j).frames(end)+10,:),'pchip');
                             end
-                            Trial.Marker(i).Processing.Gap(j) = 'pchip';
+                            Trial.Marker(i).Processing.Gap(j).reconstruction = 'pchip';
                         end
                     end
                 end
@@ -187,8 +197,8 @@ if ~isempty(Static)
     if strcmp(fmethod.type,'makima')
         for i = 1:size(Trial.Marker,2)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
-                if ~isempty(Trial.Marker(i).Gap)
-                    for j = 1:size(Trial.Marker(i).Gap,2)
+                if ~isempty(Trial.Marker(i).Trajectory.Gap)
+                    for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
                         if size(Trial.Marker(i).Trajectory.Gap(j).frames,2) < fmethod.gapThreshold
                             if Trial.Marker(i).Trajectory.Gap(j).frames(1) > 10 && ...
                                Trial.Marker(i).Trajectory.Gap(j).frames(end) < Trial.n1-9
@@ -197,7 +207,7 @@ if ~isempty(Static)
                                 fillmissing(Trial.Marker(i).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(j).frames(1)-10: ...
                                                                             Trial.Marker(i).Trajectory.Gap(j).frames(end)+10,:),'makima');
                             end
-                            Trial.Marker(i).Processing.Gap(j) = 'makima';
+                            Trial.Marker(i).Processing.Gap(j).reconstruction = 'makima';
                         end
                     end
                 end
@@ -224,9 +234,9 @@ if ~isempty(Static)
         clear k tMarker;
         for i = 1:size(Trial.Marker,2)
             if ~isempty(Trial.Marker(i).Trajectory.raw)
-                if ~isempty(Trial.Marker(i).Gap)
-                    for j = 1:size(Trial.Marker(i).Gap,2)
-                        Trial.Marker(i).Processing.Gap(j) = 'intercor';
+                if ~isempty(Trial.Marker(i).Trajectory.Gap)
+                    for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
+                        Trial.Marker(i).Processing.Gap(j).reconstruction = 'intercor';
                     end
                 end
             end
@@ -240,8 +250,8 @@ if ~isempty(Static)
     %           - At least 3 other markers, without gap, are needed on each segment
     if strcmp(fmethod.type,'rigid')
         for i = 1:size(Trial.Marker,2)        
-            if ~isempty(Trial.Marker(i).Gap)
-                for j = 1:size(Trial.Marker(i).Gap,2)
+            if ~isempty(Trial.Marker(i).Trajectory.Gap)
+                for j = 1:size(Trial.Marker(i).Trajectory.Gap,2)
 
                     % Markers related to a rigid body
                     if strcmp(Trial.Marker(i).type,'landmark') || ...
@@ -286,7 +296,7 @@ if ~isempty(Static)
                         end
                         clear segment;
                     end
-                    Trial.Marker(i).Processing.Gap(j) = 'rigid';
+                    Trial.Marker(i).Processing.Gap(j).reconstruction = 'rigid';
                 end
             end
         end               
@@ -327,7 +337,7 @@ if ~isempty(Static)
                         if k ~= i
                             if strcmp(Trial.Marker(k).Body.Segment.label,nsegment) == 1
                                 if ~isempty(Trial.Marker(k).Trajectory.raw)
-                                    if isempty(find(isnan(Trial.Marker(k).Trajectory.fill(Trial.Marker(i).Gap(1).frames,1))))
+                                    if isempty(find(isnan(Trial.Marker(k).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(1).frames,1))))
                                         kmarker = [kmarker k];
                                     end
                                 end
@@ -343,7 +353,7 @@ if ~isempty(Static)
                     for k = 1:size(kmarker,2)
                         X = [X; Static.Marker(kmarker(k)).Trajectory.fill];
                     end
-                    for t = Trial.Marker(i).Gap(1).frames
+                    for t = Trial.Marker(i).Trajectory.Gap(1).frames
                         Y = [];
                         for k = 1:size(kmarker,2)
                             Y = [Y; Trial.Marker(kmarker(k)).Trajectory.fill(t,:)];
@@ -353,7 +363,7 @@ if ~isempty(Static)
                             Static.Marker(i).Trajectory.fill*R'+d';
                         clear R d;
                     end
-                    Trial.Marker(i).Gap(1).reconstruction = 'rigid';
+                    Trial.Marker(i).Trajectory.Gap(1).reconstruction = 'rigid';
                 end
                 clear segment;
                 
@@ -370,7 +380,7 @@ if ~isempty(Static)
                         if k ~= i
                             if strcmp(Trial.Marker(k).Body.Curve.label,ncurve) == 1
                                 if ~isempty(Trial.Marker(k).Trajectory.raw)
-                                    if isempty(find(isnan(Trial.Marker(k).Trajectory.fill(Trial.Marker(i).Gap(1).frames,1))))
+                                    if isempty(find(isnan(Trial.Marker(k).Trajectory.fill(Trial.Marker(i).Trajectory.Gap(1).frames,1))))
                                         kmarker = [kmarker k];
                                     end
                                 end
@@ -410,7 +420,7 @@ if ~isempty(Static)
                         end
                     end
                     if prev ~= 0 && next ~= 0
-                        for t = Trial.Marker(i).Gap(1).frames
+                        for t = Trial.Marker(i).Trajectory.Gap(1).frames
                             
                             % Store and sort the position of other
                             % semi-landmarks of the related curve
@@ -471,7 +481,7 @@ if ~isempty(Static)
                                 [X2 Y2 Z2];
                             clear X P1 P2 X2 Y2 Z2;
                         end
-                        Trial.Marker(i).Gap(1).reconstruction = 'curve';
+                        Trial.Marker(i).Trajectory.Gap(1).reconstruction = 'curve';
                     end
                 end
                 clear segment;
@@ -489,37 +499,38 @@ for i = 1:size(Trial.Marker,2)
             % Method 1: Low pass filter (Butterworth 2nd order, [smethod.parameter] Hz)
             if strcmp(smethod.type,'none')    
                 Trial.Marker(i).Trajectory.smooth = Trial.Marker(i).Trajectory.fill;
-                Trial.Marker(i).smoothing = 'none';
+                Trial.Marker(i).Processing.smooth = 'none';
             % Method 2: Low pass filter (Butterworth 2nd order, [smethod.parameter] Hz)
             elseif strcmp(smethod.type,'butterLow2')                
                 [B,A]                             = butter(1,smethod.parameter/(Trial.fmarker/2),'low'); 
                 Trial.Marker(i).Trajectory.smooth = filtfilt(B,A,Trial.Marker(i).Trajectory.fill);
-                Trial.Marker(i).smoothing = 'butterLow2';
+                Trial.Marker(i).Processing.smooth = 'butterLow2';
             % Method 3: Moving average (window of [smethod.parameter] frames)
             elseif strcmp(smethod.type,'movmedian')
                 Trial.Marker(i).Trajectory.smooth = smoothdata(Trial.Marker(i).Trajectory.fill,'movmedian',smethod.parameter);
-                Trial.Marker(i).smoothing = 'movmedian';
+                Trial.Marker(i).Processing.smooth = 'movmedian';
             % Method 4: Moving average (window of [smethod.parameter] frames)
             elseif strcmp(smethod.type,'movmean')
                 Trial.Marker(i).Trajectory.smooth = smoothdata(Trial.Marker(i).Trajectory.fill,'movmean',smethod.parameter);
-                Trial.Marker(i).smoothing = 'movmean';
+                Trial.Marker(i).Processing.smooth = 'movmean';
             % Method 5: Gaussian-weighted moving average (window of [smethod.parameter] frames)
             elseif strcmp(smethod.type,'gaussian')
                 Trial.Marker(i).Trajectory.smooth = smoothdata(Trial.Marker(i).Trajectory.fill,'gaussian',smethod.parameter);
-                Trial.Marker(i).smoothing = 'gaussian';
+                Trial.Marker(i).Processing.smooth = 'gaussian';
             % Method 6: Robust quadratic regression (window of [smethod.parameter] frames)
             elseif strcmp(smethod.type,'rloess')
                 Trial.Marker(i).Trajectory.smooth = smoothdata(Trial.Marker(i).Trajectory.fill,'rloess',smethod.parameter);
-                Trial.Marker(i).smoothing = 'rloess';
+                Trial.Marker(i).Processing.smooth = 'rloess';
             % Method 7: Savitzky-Golay filter (window of [smethod.parameter] frames)
             elseif strcmp(smethod.type,'sgolay')
                 Trial.Marker(i).Trajectory.smooth = smoothdata(Trial.Marker(i).Trajectory.fill,'sgolay',smethod.parameter);
-                Trial.Marker(i).smoothing = 'sgolay';
+                Trial.Marker(i).Processing.smooth = 'sgolay';
             end
         else
             Trial.Marker(i).Trajectory.smooth = Trial.Marker(i).Trajectory.fill;
         end
     else
         Trial.Marker(i).Trajectory.smooth = [];
+        Trial.Marker(i).Processing.smooth = 'none';
     end
 end

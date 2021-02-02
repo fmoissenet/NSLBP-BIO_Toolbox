@@ -32,6 +32,7 @@ disp('Set folders');
 Folder.toolbox      = 'C:\Users\moissene\Documents\Professionnel\projets recherche\2019 - NSCLBP - Biomarkers\Données\NSLBP-BIO_Toolbox\';
 Folder.dependencies = [Folder.toolbox,'dependencies\'];
 Folder.data         = uigetdir;
+Folder.export       = [Folder.data,'\output\'];
 addpath(Folder.toolbox);
 addpath(genpath(Folder.dependencies));
 
@@ -58,6 +59,7 @@ Session.type              = 'INI_session';
 Session.examiner          = 'FM';
 Session.participantHeight = 180.5; % cm
 Session.participantWeight = 81.0; % kg
+Session.markerHeight      = 14*1e-3; % m
 
 % -------------------------------------------------------------------------
 % LOAD C3D FILES
@@ -74,7 +76,7 @@ trialTypes = {'Static',...
               'Swing_R_Leg','Swing_L_Leg',...
               'Trunk_Forward','Trunk_Lateral','Trunk_Rotation',...
               'Weight_Constrained','Weight_Unconstrained',...
-              'sMVC','Test'};
+              'sMVC'};
 
 % Extract data from C3D files
 cd(Folder.data);
@@ -118,21 +120,24 @@ disp('Pre-process static data');
 for i = 1:size(Static,2)
     disp(['  - ',Static(i).file]);
     
-    % Events
+    % Get manually defined events
     Static(i).Event = [];
     
-    % Marker trajectories
+    % Process marker trajectories
     Marker           = btkGetMarkers(Static(i).btk);
     Static(i).Marker = [];
     Static(i)        = InitialiseMarkerTrajectories(Static(i),Marker);
     Static(i)        = ProcessMarkerTrajectories([],Static(i));
     clear Marker;
     
-    % EMG signals
+    % Process EMG signals
     Static(i).EMG = [];
     
+    % Process forceplate signals
+    Static(i).GRF = [];
+    
     % Store processed static data in a new C3D file
-    ExportC3D(Static(i),Participant,Session,Folder);
+    ExportC3D(Static(i),[],Participant,Session,Folder);
 end
 
 % EMG calibration data
@@ -146,16 +151,16 @@ for i = 1:size(Trial,2)
         
         disp(['  - ',Trial(i).file]);
 
-        % Events
+        % Get manually defined events
         Event          = btkGetEvents(Trial(i).btk);
         Trial(i).Event = [];
         Trial(i)       = InitialiseEvents(Trial(i),Event);
         clear Event;   
     
-        % Marker trajectories
+        % Process marker trajectories
         Trial(i).Marker = [];  
         
-        % EMG signals
+        % Process EMG signals
         EMG                    = btkGetAnalogs(Trial(i).btk);
         Trial(i).EMG           = [];
         Trial(i)               = InitialiseEMGSignals(Trial(i),EMG);
@@ -165,52 +170,87 @@ for i = 1:size(Trial,2)
         smethod.parameter      = 3;
         nmethod.type           = 'sMVC';
         [Calibration,Trial(i)] = ProcessEMGSignals(Calibration,Trial(i),1,fmethod,smethod,nmethod);
-        clear EMG;
+        clear EMG fmethod smethod nmethod;
+    
+        % Process forceplate signals
+        Trial(i).GRF = [];
         
         % Store processed static data in a new C3D file
-        ExportC3D(Trial(i),Participant,Session,Folder);        
+        ExportC3D(Trial(i),[],Participant,Session,Folder);        
    
     end
 end
 
 % Trial data
 disp('Pre-process trial data');
-for i = [12,28]%1:size(Trial,2)
+for i = 21%1:size(Trial,2)
     
     if isempty(strfind(Trial(i).type,'sMVC')) % Endurance tasks considered as Trial here
-        
+
         disp(['  - ',Trial(i).file]);
 
-        % Events
-        Event          = btkGetEvents(Trial(i).btk);
+        % Get manually defined events
         Trial(i).Event = [];
+        Event          = btkGetEvents(Trial(i).btk);
         Trial(i)       = InitialiseEvents(Trial(i),Event);
         clear Event;   
 
-        % Marker trajectories   
-        Marker               = btkGetMarkers(Trial(i).btk);
+        % Process marker trajectories   
         Trial(i).Marker      = [];
+        Marker               = btkGetMarkers(Trial(i).btk);
         Trial(i)             = InitialiseMarkerTrajectories(Trial(i),Marker);        
         fmethod.type         = 'intercor';
         fmethod.gapThreshold = [];
         smethod.type         = 'movmean';
-        smethod.parameter    = 10;        
+        smethod.parameter    = 15;        
         Trial(i)             = ProcessMarkerTrajectories(Static,Trial(i),fmethod,smethod);        
-        clear Marker;
+        clear Marker fmethod smethod;
                 
-        % EMG signals
-        EMG                    = btkGetAnalogs(Trial(i).btk);
+        % Process EMG signals
         Trial(i).EMG           = [];
+        EMG                    = btkGetAnalogs(Trial(i).btk);
         Trial(i)               = InitialiseEMGSignals(Trial(i),EMG);
         fmethod.type           = 'butterBand4';
         fmethod.parameter      = [10 450];
         smethod.type           = 'butterLow2';
         smethod.parameter      = 3;
         [Calibration,Trial(i)] = ProcessEMGSignals(Calibration,Trial(i),0,fmethod,smethod,[]);
-        clear EMG;
+        clear EMG fmethod smethod;
+        
+        % Process forceplate signals
+        Trial(i).GRF      = [];
+        tGRF              = [];
+        Trial(i).btk      = Correct_FP_C3D_Mokka(Trial(i).btk);
+        tGRF              = btkGetForcePlatformWrenches(Trial(i).btk); % Required for C3D exportation only
+        GRF               = btkGetGroundReactionWrenches(Trial(i).btk);
+        GRFmeta           = btkGetMetaData(Trial(i).btk,'FORCE_PLATFORM');
+        Trial(i)          = InitialiseGRFSignals(Trial(i),GRF,GRFmeta);
+        fmethod.type      = 'threshold';
+        fmethod.parameter = 35;
+        smethod.type      = 'butterLow2';
+        smethod.parameter = 50;
+        [Trial(i),tGRF]   = ProcessGRFSignals(Session,Trial(i),GRF,tGRF,fmethod,smethod);
+        clear GRF fmethod smethod;
+                
+        % Define additional events (for trials other than gait)
+        % Crop raw files if needed to keep only wanted cycles
+        
+        % Perturbation_R_Shoulder
+        P1 = Trial(i).Marker(58).Trajectory.smooth-Trial(i).Marker(54).Trajectory.smooth;
+        P2 = Trial(i).Marker(54).Trajectory.smooth-Trial(i).Marker(8).Trajectory.smooth;
+        for time = 1:size(P1,1)
+            a(time) = atan2(norm(cross(P1(time,:),P2(time,:))),dot(P1(time,:),P2(time,:))); % Angle in radians
+        end
+        [~,ind] = findpeaks(rad2deg(a));
+        Trial(i).Event(1).label = 'start';
+        Trial(i).Event(1).value = ind(1:11); % Only 10 cycles performed
+        
+        % Cut data per cycle
+        Trial(i) = CutCycles(Trial(i));
 
         % Store processed static data in a new C3D file
-        ExportC3D(Trial(i),Participant,Session,Folder);
+        ExportC3D(Trial(i),tGRF,Participant,Session,Folder);
+        clear tGRF;
         
     end
 end

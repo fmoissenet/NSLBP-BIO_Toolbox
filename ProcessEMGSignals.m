@@ -20,7 +20,7 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 % -------------------------------------------------------------------------
 
-function [Calibration,Trial] = ProcessEMGSignals(Calibration,Trial,defCal,fmethod,smethod,nmethod)
+function [Calibration,Trial] = ProcessGRFSignals(Calibration,Trial,defCal,fmethod,smethod,nmethod)
 
 for i = 1:size(Trial.EMG,2)
     if ~isempty(Trial.EMG(i).Signal.raw)
@@ -79,7 +79,7 @@ for i = 1:size(Trial.EMG,2)
         
         % Method 5: Signal root mean square (RMS) (window of [smethod.parameter] frames)
         elseif strcmp(smethod.type,'rms')
-            Trial.EMG(i).Signal.smooth     = envelope(Trial.EMG(i).Signal.filt,smethod.parameter,'rms')
+            Trial.EMG(i).Signal.smooth     = envelope(Trial.EMG(i).Signal.filt,smethod.parameter,'rms');
             Trial.EMG(i).Processing.smooth = 'rms';
         end
         
