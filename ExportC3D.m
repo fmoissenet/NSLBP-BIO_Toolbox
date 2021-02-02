@@ -20,7 +20,7 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 % -------------------------------------------------------------------------
 
-function ExportC3D(Trial,Participant,Session,Folder)
+function ExportC3D(Trial,tGRF,Participant,Session,Folder)
 
 % Set new C3D file
 btkFile = btkNewAcquisition();
@@ -58,6 +58,26 @@ if ~isempty(Trial.EMG)
             btkAppendAnalog(btkFile,Trial.EMG(i).label,Trial.EMG(i).Signal.norm,'EMG signal (normalised)');
         else
             btkAppendAnalog(btkFile,Trial.EMG(i).label,Trial.EMG(i).Signal.smooth,'EMG signal (mV)');
+        end
+    end
+end
+
+% Append GRF signals
+if ~isempty(Trial.GRF)
+    GRF     = btkGetGroundReactionWrenches(Trial.btk);
+    GRFmeta = btkGetMetaData(Trial.btk,'FORCE_PLATFORM');
+    for i = 1:size(GRF,1)
+        GRF(i).corners = GRFmeta.children.CORNERS.info.values(:,:,i)*1e-3;
+        GRF(i).origin  = GRFmeta.children.ORIGIN.info.values(:,i)*1e-3;
+        Trial.GRF(i).Signal.M.smooth = Trial.GRF(i).Signal.M.smooth;
+        if ~isempty(Trial.GRF(i).Signal.F.smooth)
+            btkAppendForcePlatformType2(btkFile,tGRF(i).F,...
+                                        tGRF(i).M,...
+                                        GRF(i).corners',GRF(i).origin',[0,0,0]);
+        else
+            btkAppendForcePlatformType2(btkFile,zeros(size(GRF(1).F)),...
+                                        zeros(size(GRF(1).M)),...
+                                        GRF(i).corners',GRF(i).origin',[0,0,0]);
         end
     end
 end
@@ -125,5 +145,5 @@ info.values(1:nData) = {Session.date Session.type Session.examiner ...
 btkAppendMetaData(btkFile,'SESSION','VALUES',info);
 
 % Export C3D file
-cd([Folder.data,'\output\']);
+cd(Folder.export);
 btkWriteAcquisition(btkFile,[regexprep(Trial.file,'.c3d',''),'_processed.c3d']);
