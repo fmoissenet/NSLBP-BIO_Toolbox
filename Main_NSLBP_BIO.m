@@ -183,7 +183,7 @@ end
 
 % Trial data
 disp('Pre-process trial data');
-for i = 21%1:size(Trial,2)
+for i = 1:size(Trial,2)
     
     if isempty(strfind(Trial(i).type,'sMVC')) % Endurance tasks considered as Trial here
 
@@ -234,16 +234,74 @@ for i = 21%1:size(Trial,2)
                 
         % Define additional events (for trials other than gait)
         % Crop raw files if needed to keep only wanted cycles
+        if contains(Trial(i).type,'Perturbation_R_Shoulder')
+            type      = 1;
+            threshold = 135; % deg
+            vec1      = Trial(i).Marker(58).Trajectory.smooth-Trial(i).Marker(54).Trajectory.smooth; % Vector RHAN-RSHO
+            vec2      = Trial(i).Marker(8).Trajectory.smooth-Trial(i).Marker(54).Trajectory.smooth; % Vector RGTR-RSHO
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
         
-        % Perturbation_R_Shoulder
-        P1 = Trial(i).Marker(58).Trajectory.smooth-Trial(i).Marker(54).Trajectory.smooth;
-        P2 = Trial(i).Marker(54).Trajectory.smooth-Trial(i).Marker(8).Trajectory.smooth;
-        for time = 1:size(P1,1)
-            a(time) = atan2(norm(cross(P1(time,:),P2(time,:))),dot(P1(time,:),P2(time,:))); % Angle in radians
+        elseif contains(Trial(i).type,'Perturbation_L_Shoulder')   
+            type      = 1;
+            threshold = 135; % deg
+            vec1      = Trial(i).Marker(63).Trajectory.smooth-Trial(i).Marker(59).Trajectory.smooth; % Vector LHAN-lSHO
+            vec2      = Trial(i).Marker(23).Trajectory.smooth-Trial(i).Marker(59).Trajectory.smooth; % Vector LGTR-LSHO
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'Trunk_Forward')
+            type      = 2;
+            threshold = 45; % deg
+            vec1      = Trial(i).Marker(41).Trajectory.smooth-...
+                        (Trial(i).Marker(3).Trajectory.smooth+Trial(i).Marker(4).Trajectory.smooth)/2; % Vector C7-mean(RPSI,LPSI)
+            vec2      = repmat([0 0 1],[size(vec1,1),1]); % Vector ICS_Z
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'Trunk_Lateral')
+            type      = 2;
+            threshold = 22.5; % deg
+            vec1      = Trial(i).Marker(41).Trajectory.smooth-...
+                        (Trial(i).Marker(3).Trajectory.smooth+Trial(i).Marker(4).Trajectory.smooth)/2; % Vector C7-mean(RPSI,LPSI)
+            vec2      = repmat([0 0 1],[size(vec1,1),1]); % Vector ICS_Z
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'Trunk_Rotation')
+            type      = 2;
+            threshold = 22.5; % deg
+            vec1      = Trial(i).Marker(54).Trajectory.smooth-Trial(i).Marker(59).Trajectory.smooth; % Vector RSHO-lSHO
+            vec2      = Trial(i).Marker(15).Trajectory.smooth-Trial(i).Marker(30).Trajectory.smooth; % Vector RANK-LANK
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'Weight_Constrained')
+            type      = 2;
+            threshold = 30; % deg
+            vec1      = Trial(i).Marker(8).Trajectory.smooth-Trial(i).Marker(10).Trajectory.smooth; % Vector RGTR-RKNE
+            vec2      = Trial(i).Marker(8).Trajectory.smooth-Trial(i).Marker(15).Trajectory.smooth; % Vector RANK-RKNE
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'Weight_Unconstrained')
+            type      = 2;
+            threshold = 30; % deg
+            vec1      = Trial(i).Marker(41).Trajectory.smooth-...
+                        (Trial(i).Marker(3).Trajectory.smooth+Trial(i).Marker(4).Trajectory.smooth)/2; % Vector C7-mean(RPSI,LPSI)
+            vec2      = repmat([0 0 1],[size(vec1,1),1]); % Vector ICS_Z
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
+        
+        elseif contains(Trial(i).type,'S2S')
+            type      = 3;
+            threshold = 22.5; % deg
+            vec1      = Trial(i).Marker(41).Trajectory.smooth-...
+                        (Trial(i).Marker(3).Trajectory.smooth+Trial(i).Marker(4).Trajectory.smooth)/2; % Vector C7-mean(RPSI,LPSI)
+            vec2      = repmat([0 0 1],[size(vec1,1),1]); % Vector ICS_Z
+            Trial(i)  = DetectEvents(Trial(i),vec1,vec2,type,threshold);
+            clear type threshold vec1 vec2;
         end
-        [~,ind] = findpeaks(rad2deg(a));
-        Trial(i).Event(1).label = 'start';
-        Trial(i).Event(1).value = ind(1:11); % Only 10 cycles performed
         
         % Cut data per cycle
         Trial(i) = CutCycles(Trial(i));
