@@ -213,13 +213,15 @@ for i = 1:size(Trial,2)
         Trial(i).Vmarker = [];
         Trial(i).Segment = [];
         Trial(i).Joint   = [];
+        Trial(i)         = InitialiseVmarkerTrajectories(Trial(i));
         Trial(i)         = InitialiseSegments(Trial(i));
         Trial(i)         = InitialiseJoints(Trial(i));
         if isempty(strfind(Trial(i).type,'Endurance'))
             Trial(i)          = DefineSegments(Participant,Trial(i));
             Trial(i)          = Joint_Kinematics_FM(Trial(i),2,5); % Right lower limb kinematic chain
             Trial(i)          = Joint_Kinematics_FM(Trial(i),7,10); % Left lower limb kinematic chain
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),10,13); % Pelvis/spine/head
+            Trial(i)          = Joint_Kinematics_FM(Trial(i),10,13); % Pelvis/lumbar/thorax/head
+            Trial(i)          = Joint_Kinematics_FM(Trial(i),14,19); % Pelvis/lower lumbar/upper lumbar/lower thorax/upper thorax/head
             Trial(i).Joint(5) = Trial(i).Joint(10); % Double pelvis/lumbar joint for indices coherence
         end
         
@@ -333,6 +335,7 @@ end
 % -------------------------------------------------------------------------
 % COMPUTE BIOMARKERS
 % -------------------------------------------------------------------------
+disp('Compute biomarkers');
 
 cd(Folder.biomarkers);
 load('Biomarkers.mat');
@@ -363,6 +366,7 @@ end
 
 % BMo3
 % Sit to stand	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
+disp('  - BMo3');
 for i = 1:size(Trial,2)
     if contains(Trial(i).type,'S2S_Unconstrained')
         % Right side
@@ -371,7 +375,8 @@ for i = 1:size(Trial,2)
             temp = [temp max(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1) - ...
                          min(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1)];
         end
-        Biomarker.BMo3(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo3.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo3.units                                 = '°deg';
         clear temp;
         % Left side
         temp = [];
@@ -379,13 +384,15 @@ for i = 1:size(Trial,2)
             temp = [temp max(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1) - ...
                          min(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1)];
         end
-        Biomarker.BMo3(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
+        Biomarker.BMo3.value(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
+        Biomarker.BMo3.units                                 = '°deg';
         clear temp;
     end
 end
 
 % BMo4
 % Stand to sit	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
+disp('  - BMo4');
 for i = 1:size(Trial,2)
     if contains(Trial(i).type,'S2S_Unconstrained')
         % Right side
@@ -394,7 +401,8 @@ for i = 1:size(Trial,2)
             temp = [temp max(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1) - ...
                          min(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1)];
         end
-        Biomarker.BMo4(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo4.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo4.units                                 = '°deg';
         clear temp;
         % Left side
         temp = [];
@@ -402,9 +410,217 @@ for i = 1:size(Trial,2)
             temp = [temp max(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1) - ...
                          min(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1)];
         end
-        Biomarker.BMo4(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
+        Biomarker.BMo4.value(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
+        Biomarker.BMo4.units                                 = '°deg';
         clear temp;
     end
+end
+
+% BMo5
+% Trunk sagittal bending	Lumbar	Spatial/intensity	Lower lumbar sagittal angle (max)
+disp('  - BMo5');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(14).Euler.rcycle,4)
+            temp = [temp max(Trial(i).Joint(14).Euler.rcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo5.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo5.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo6
+% Trunk sagittal bending	Lumbar	Spatial/intensity	Lower lumbar sagittal angular velocity (max)
+disp('  - BMo6');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(14).Euler.rcycle,4)
+            temp = [temp max(gradient(Trial(i).Joint(14).Euler.rcycle(:,:,1,icycle)),[],1)];
+        end
+        Biomarker.BMo6.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo6.units                                 = '°deg/frame';
+        clear temp;
+    end
+end
+
+% BMo9
+% Trunk sagittal bending	Thorax	Spatial/intensity	Lower thorax sagittal angle (max)
+disp('  - BMo9');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(16).Euler.rcycle,4)
+            temp = [temp max(Trial(i).Joint(16).Euler.rcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo9.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo9.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo10
+% Trunk sagittal bending	Lumbar	Spatial/intensity	Lumbar contribution to thorax angle (rom)
+disp('  - BMo10');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp1 = [];
+        temp2 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            if abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,1),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,1),1))>0.1 % Y forward
+                value = pi/2-Trial(i).Segment(11).Euler.rcycle(:,1,2,icycle)-mean(pi/2-Trial(28).Segment(11).Euler.rcycle(1:10,1,2,icycle));
+                temp1 = [temp1 max(value,[],1)];
+                clear value;
+                value = pi/2-Trial(i).Segment(12).Euler.rcycle(:,1,2,icycle)-mean(pi/2-Trial(28).Segment(12).Euler.rcycle(1:10,1,2,icycle));
+                temp2 = [temp2 max(value,[],1)];
+                clear value;
+            elseif abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,2),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,2),1))>0.1 % X forward
+                value = pi/2-Trial(i).Segment(11).Euler.rcycle(:,1,1,icycle)-mean(pi/2-Trial(28).Segment(11).Euler.rcycle(1:10,1,1,icycle));
+                temp1 = [temp1 max(value,[],1)];
+                clear value;
+                value = pi/2-Trial(i).Segment(12).Euler.rcycle(:,1,1,icycle)-mean(pi/2-Trial(28).Segment(12).Euler.rcycle(1:10,1,1,icycle));
+                temp2 = [temp2 max(value,[],1)];
+                clear value;
+            end
+        end
+        Biomarker.BMo10.value(igroup,iparticipant,isession,1) = mean(temp1*100/temp2);
+        Biomarker.BMo10.units                                 = '%';
+        clear temp1 temp2;
+    end
+end
+
+% BMo12
+% Trunk sagittal bending	Lumbar	Spatial/intensity	Lumbar sagittal angle (max)
+disp('  - BMo12');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            temp = [temp max(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo12.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo12.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo17
+% Trunk sagittal bending	Lumbar	Spatial/intensity	Lumbar sagittal angular velocity (max)
+disp('  - BMo17');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            temp = [temp max(gradient(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle)),[],1)];
+        end
+        Biomarker.BMo17.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo17.units                                 = '°deg/frame';
+        clear temp;
+    end
+end
+
+% BMo23
+% Sit to stand	Lumbar/leg	Spatial/intensity	Lumbar/hip ratio of sagittal angle (rom)
+disp('  - BMo23');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        temp1 = [];
+        temp2 = [];
+        temp3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            temp1 = [temp1 max(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle),[],1)];
+            temp2 = [temp2 max(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1)];
+            temp3 = [temp3 max(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo23.value(igroup,iparticipant,isession,1) = mean(temp1/temp2);
+        Biomarker.BMo23.value(igroup,iparticipant,isession,2) = mean(temp1/temp3);
+        Biomarker.BMo23.units                                 = 'ratio';
+        clear temp1 temp2;
+    end
+end
+
+% BMo24
+% Stand to sit	Lumbar/leg	Spatial/intensity	Lumbar/hip ratio of sagittal angle (rom)
+disp('  - BMo24');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        temp1 = [];
+        temp2 = [];
+        temp3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.lcycle,4)
+            temp1 = [temp1 max(Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle),[],1)];
+            temp2 = [temp2 max(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1)];
+            temp3 = [temp3 max(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1) - ...
+                           min(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo24.value(igroup,iparticipant,isession,1) = mean(temp1/temp2);
+        Biomarker.BMo24.value(igroup,iparticipant,isession,2) = mean(temp1/temp3);
+        Biomarker.BMo24.units                                 = 'ratio';
+        clear temp1 temp2;
+    end
+end
+
+% BMo25
+% Sit to stand	Lumbar/leg	Coordination	Lumbar/hip relative phase difference (max)
+disp('  - BMo25');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        temp1 = [];
+        temp2 = [];
+        temp3 = [];
+        
+        atan(vel/ang)
+    end
+end
+
+figure();
+for i = 1:101
+    % Stick figure
+    for j = 1:size(Trial(28).Marker,2)
+        if j == 1
+            sfig1 = subplot(1,3,1);
+            hold on;
+            view(90,0);
+            axis equal;
+            sfig2 = subplot(1,3,2);
+            hold on;
+            sfig3 = subplot(1,3,3);
+            hold on;
+        end
+        if ~isempty(Trial(28).Marker(j).Trajectory.smooth)
+            subplot(1,3,1);
+            plot3(Trial(28).Marker(j).Trajectory.rcycle(i,1,1),...
+                  Trial(28).Marker(j).Trajectory.rcycle(i,2,1),...
+                  Trial(28).Marker(j).Trajectory.rcycle(i,3,1),...
+                  'Marker','o','Color','red');
+        end
+    end
+    for j = 1:size(Trial(28).Vmarker,2)
+        subplot(1,3,1);
+        plot3(Trial(28).Vmarker(j).Trajectory.rcycle(i,1,1),...
+              Trial(28).Vmarker(j).Trajectory.rcycle(i,2,1),...
+              Trial(28).Vmarker(j).Trajectory.rcycle(i,3,1),...
+              'Marker','o','Color','blue');
+    end
+    % Variable
+    subplot(1,3,2);
+    ylim([-10,50]);
+%     title('Lumbopelvic angle');
+    plot(i,rad2deg(Trial(28).Joint(10).Euler.rcycle(i,:,1,1)),'Marker','x','Color','blue','Linestyle','-');
+    subplot(1,3,3);
+    ylim([-10,50]);
+%     title('Thoracopelvic angle');
+    plot(i,rad2deg(Trial(28).Joint(11).Euler.rcycle(i,:,1,1)),'Marker','x','Color','red','Linestyle','-');
+    
+    pause(0.01);
+%     cla(sfig1);
 end
 
 % Muscular activity biomarkers
