@@ -24,8 +24,11 @@ function Trial = InitialiseSegments(Trial)
 
 segmentLabels = {'Right forceplate','Right foot','Right tibia','Right femur','Pelvis',...
                  'Left forceplate','Left foot','Left tibia','Left femur','Pelvis',...
-                 'Lumbar','Thorax','Head'};
-for i = 1:13
+                 'Lumbar','Thorax','Head',...
+                 'Pelvis',...
+                 'Lower lumbar','Upper lumbar','Lower thorax','Upper thorax','Head'};
+             
+for i = 1:length(segmentLabels)
     Trial.Segment(i).label        = segmentLabels{i};
     Trial.Segment(i).rM.smooth    = [];
     Trial.Segment(i).rM.rcycle    = [];

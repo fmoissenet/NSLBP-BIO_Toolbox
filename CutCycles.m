@@ -91,6 +91,18 @@ if contains(Trial.type,'Gait')
             end
         end
         
+        % Vmarker trajectories
+        for j = 1:size(Trial.Vmarker,2)
+            if ~isempty(Trial.Vmarker(j).Trajectory.smooth)
+                temp = interp1(RCycle(i).k,...
+                               Trial.Vmarker(j).Trajectory.smooth(RCycle(i).start:RCycle(i).stop,:),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Vmarker(j).Trajectory.rcycle(:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
         % EMG signals
         for j = 1:size(Trial.EMG,2)
             if ~isempty(Trial.EMG(j).Signal.smooth)
@@ -201,6 +213,19 @@ if contains(Trial.type,'Gait')
                                LCycle(i).k0,...
                                'spline');
                 Trial.Marker(j).Trajectory.lcycle(:,:,i) = temp;
+                clear temp;
+                
+            end
+        end
+        
+        % Vmarker trajectories
+        for j = 1:size(Trial.Vmarker,2)
+            if ~isempty(Trial.Vmarker(j).Trajectory.smooth)
+                temp = interp1(LCycle(i).k,...
+                               Trial.Vmarker(j).Trajectory.smooth(LCycle(i).start:LCycle(i).stop,:),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Vmarker(j).Trajectory.lcycle(:,:,i) = temp;
                 clear temp;
                 
             end
@@ -390,6 +415,18 @@ elseif contains(Trial.type,'S2S') || ...
             end
         end
         
+        % Vmarker trajectories
+        for j = 1:size(Trial.Vmarker,2)
+            if ~isempty(Trial.Vmarker(j).Trajectory.smooth)
+                temp = interp1(RCycle(i).k,...
+                               Trial.Vmarker(j).Trajectory.smooth(RCycle(i).start:RCycle(i).stop,:),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Vmarker(j).Trajectory.rcycle(:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
         % EMG signals
         for j = 1:size(Trial.EMG,2)
             if ~isempty(Trial.EMG(j).Signal.smooth)
@@ -500,6 +537,19 @@ elseif contains(Trial.type,'S2S') || ...
                                LCycle(i).k0,...
                                'spline');
                 Trial.Marker(j).Trajectory.lcycle(:,:,i) = temp;
+                clear temp;
+                
+            end
+        end
+        
+        % Vmarker trajectories
+        for j = 1:size(Trial.Vmarker,2)
+            if ~isempty(Trial.Vmarker(j).Trajectory.smooth)
+                temp = interp1(LCycle(i).k,...
+                               Trial.Vmarker(j).Trajectory.smooth(LCycle(i).start:LCycle(i).stop,:),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Vmarker(j).Trajectory.lcycle(:,:,i) = temp;
                 clear temp;
                 
             end

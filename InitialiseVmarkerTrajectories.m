@@ -20,23 +20,15 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 % -------------------------------------------------------------------------
 
-function Trial = InitialiseJoints(Trial)
+function Trial = InitialiseVmarkerTrajectories(Trial)
 
-jointLabels = {'Right MTP','Right ankle','Right knee','Right hip','Lumbo-pelvis joint', ...
-               'Left MTP','Left ankle','Left knee','Left hip','Lumbo-pelvis joint', ...
-               'Lumbo-pelvis joint','Thoraco-lumbar joint', ...
-               'Cervical joint'};
-
-for i = 1:11
-    Trial.Joint(i).label        = jointLabels{i};
-    Trial.Joint(i).T.smooth     = [];
-    Trial.Joint(i).T.rcycle     = [];
-    Trial.Joint(i).T.lcycle     = [];
-    Trial.Joint(i).Euler.smooth = [];
-    Trial.Joint(i).Euler.rcycle = [];
-    Trial.Joint(i).Euler.lcycle = [];
-    Trial.Joint(i).dj.smooth    = [];
-    Trial.Joint(i).dj.rcycle    = [];
-    Trial.Joint(i).dj.lcycle    = [];
-    Trial.Joint(i).sequence     = '';
+vmarkerLabels = {'RMJC','RAJC','RKJC','RHJC',...
+                 'LMJC','LAJC','LKJC','LHJC',...
+                 'LJC','TJC','CJC','VER'};
+             
+for i = 1:length(vmarkerLabels)
+    Trial.Vmarker(i).label             = vmarkerLabels{i};
+    Trial.Vmarker(i).Trajectory.smooth = [];
+    Trial.Vmarker(i).Trajectory.rcycle = [];
+    Trial.Vmarker(i).Trajectory.lcycle = [];
 end

@@ -354,8 +354,6 @@ w13                         = Z13;
 u13                         = X13;
 Trial.Segment(13).Q.smooth  = [u13;rP13;rD13;w13];
 Trial.Segment(13).rM.smooth = [RFHD,RBHD,LFHD,LBHD];
-Trial.Segment(19).Q.smooth  = [u13;rP13;rD13;w13];
-Trial.Segment(19).rM.smooth = [RFHD,RBHD,LFHD,LBHD];
 
 % -------------------------------------------------------------------------
 % Lower lumbar parameters (Hidalgo et al. 2012)
@@ -366,7 +364,7 @@ L3 = permute(Trial.Marker(39).Trajectory.smooth,[2,3,1]);
 % Lower lumbar axes
 Y15 = Vnorm_array3(L3-S1);
 Z15 = Z11;
-X15 = cross(Y15,Z15);
+X15 = X11;
 % Lower lumbar parameters
 rP15                        = L3;
 rD15                        = S1;
@@ -381,7 +379,7 @@ Trial.Segment(15).rM.smooth = [S1,L3];
 % Upper lumbar axes
 Y16 = Vnorm_array3(T12-L3);
 Z16 = Z11;
-X16 = cross(Y16,Z16);
+X16 = X11;
 % Upper lumbar parameters
 rP16                        = T12;
 rD16                        = L3;
@@ -395,27 +393,12 @@ Trial.Segment(16).rM.smooth = [T12,L3];
 % -------------------------------------------------------------------------
 % Lower thorax axes
 Y17 = Vnorm_array3(T8-T12);
-Z17 = Z12;
-X17 = cross(Y17,Z17);
+Z17 = Z11;
+X17 = X11;
 % Lower lumbar parameters
-rP17                        = T8;
-rD17                        = T12;
-w17                         = Z17;
-u17                         = X17;
-Trial.Segment(17).Q.smooth  = [u17;rP17;rD17;w17];
-Trial.Segment(17).rM.smooth = [T8,T12];
-
-% -------------------------------------------------------------------------
-% Upper thorax parameters (Hidalgo et al. 2012)
-% -------------------------------------------------------------------------
-% Lower thorax axes
-Y18 = Vnorm_array3(C7-T8);
-Z18 = Z12;
-X18 = cross(Y18,Z18);
-% Lower lumbar parameters
-rP18                        = C7;
-rD18                        = T8;
-w18                         = Z18;
-u18                         = X18;
-Trial.Segment(18).Q.smooth  = [u18;rP18;rD18;w18];
-Trial.Segment(18).rM.smooth = [C7,T8];
+rP15                        = L3;
+rD15                        = S1;
+w15                         = Z15;
+u15                         = X15;
+Trial.Segment(15).Q.smooth  = [u15;rP15;rD15;w15];
+Trial.Segment(15).rM.smooth = [S1,L3];
