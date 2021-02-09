@@ -33,7 +33,6 @@ Folder.toolbox      = 'C:\Users\moissene\Documents\Professionnel\projets recherc
 Folder.dependencies = [Folder.toolbox,'dependencies\'];
 Folder.data         = uigetdir;
 Folder.export       = [Folder.data,'\output\'];
-Folder.biomarkers   = 'C:\Users\moissene\Documents\Professionnel\projets recherche\2019 - NSCLBP - Biomarkers\Données\';
 addpath(Folder.toolbox);
 addpath(genpath(Folder.dependencies));
 
@@ -41,7 +40,6 @@ addpath(genpath(Folder.dependencies));
 % DEFINE PARTICIPANT
 % -------------------------------------------------------------------------
 disp('Set participant parameters');
-Participant.id           = '001';
 Participant.type         = 'Control';
 Participant.gender       = 'Male';
 Participant.inclusionAge = 27; % years
@@ -216,11 +214,10 @@ for i = 1:size(Trial,2)
         Trial(i)         = InitialiseSegments(Trial(i));
         Trial(i)         = InitialiseJoints(Trial(i));
         if isempty(strfind(Trial(i).type,'Endurance'))
-            Trial(i)          = DefineSegments(Participant,Trial(i));
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),2,5); % Right lower limb kinematic chain
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),7,10); % Left lower limb kinematic chain
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),10,13); % Pelvis/spine/head
-            Trial(i).Joint(5) = Trial(i).Joint(10); % Double pelvis/lumbar joint for indices coherence
+            Trial(i) = DefineSegments(Participant,Trial(i));
+            Trial(i) = Joint_Kinematics_FM(Trial(i),2,5); % Right lower limb kinematic chain
+            Trial(i) = Joint_Kinematics_FM(Trial(i),7,10); % Left lower limb kinematic chain
+            Trial(i) = Joint_Kinematics_FM(Trial(i),10,13); % Pelvis/spine/head
         end
         
         % Process EMG signals
@@ -334,77 +331,55 @@ end
 % COMPUTE BIOMARKERS
 % -------------------------------------------------------------------------
 
-cd(Folder.biomarkers);
-load('Biomarkers.mat');
-
-% Store current participant and session in the list
-Biomarker.participant = [Biomarker.participant [Participant.id,'_',Session.type(1:3)]];
-
-% Set session indices
-if contains(Participant.type,'Control')
-    igroup = 1;
-elseif contains(Participant.type,'Patient')
-    igroup = 2;
-end
-iparticipant = str2num(Participant.id);
-if contains(Session.type,'INI')
-    isession = 1;
-elseif contains(Session.type,'REL')
-    isession = 2;
-elseif contains(Session.type,'FWP')
-    isession = 3;
-end
-
-% Compute and store participant/session biomarkers
-% Biomarker dimensions : group x participant x session x side (dim 1 if
-% central biomarker, dim 2 if right/left biomarker)
+biomarkerList = {'BMo1','BMo3','BMo4','BMo5','BMo6','BMo7','BMo8','BMo9',...
+                 'BMo10','BMo11','BMo12','BMo14','BMo15','BMo16','BMo17',...
+                 'BMo18','BMo19','BMo20','BMo21','BMo22','BMo23','BMo24',...
+                 'BMo25','BMo26','BMo27','BMo28','BMo29','BMo30','BMo31',...
+                 'BMo33','BMo34','BMo35','BMo36','BMo37','BMo38','BMo39',...
+                 'BMo40','BMo41','BMo42','BMo43','BMo44','BMo45','BMo46',...
+                 'BMo47','BMo48','BMo49','BMo50','BMo51','BMo52','BMo53',...
+                 'BMo54','BMo55','BMo56','BMo57','BMo58','BMo59','BMo60',...
+                 'BMo61','BMo62','BMo63','BMo64','BMo65','BMo66','BMo67',...
+                 'BMo68','BMo69','BMo70','BMo71','BMo72','BMo73','BMo74',...
+                 'BMo75','BMo76','BMo77','BMo78','BMo79','BMo80','BMo81',...
+                 'BMo82','BMo83','BMo84','BMo85','BMo86','BMo87','BMo88',...
+                 'BMo89','BMo90','BMo91','BMo92','BMo93','BMo94','BMo95',...
+                 'BMo96','BMo97','BMo98','BMo99','BMo100','BMo101','BMo102',...
+                 'BMo103','BMo104','BMo105','BMo106','BMo107','BMo108','BMo109',...
+                 'BMo110','BMo111','BMo112','BMo113','BMo114','BMo115','BMo116',...
+                 'BMo117','BMo118','BMu1','BMu15','BMu16','BMu22','BMu23','BMu24',...
+                 'BMu29','BMu34','BMu35','BMu36','BMu37','BMu38','BMu40','BMu41',...
+                 'BMu42','BMu43','BMu44','BMu45','BMu46','BMu47','BMu49','BMu51',...
+                 'BMu52','BMu53','BMu56','BMu57','BMu58','BMu59','BMu66','BMu67',...
+                 'BMu68','BMu69','BMu71','BMu73','BMu76','BMu77','BMu78','BMu81',...
+                 'BMu82','BMu86','BMu87','BMu88','BMu90','BMu91','BMu92','BMu93',...
+                 'BMu94','BMu95','BMu96','BMu97','BMu98','BMu100','BMu101','BMu102',...
+                 'BMu103','BMu104','BMu105','BMu106','BMu107','BMu108','BMu109',...
+                 'BMu110','BMu111','BMu112','BMu113','BMu114','BMu115','BMu116',...
+                 'BMu117','BMu118','BMu119','BMu126','BMu127','BMu129','BMu130',...
+                 'BMu131','BMu132','BMu133','BMu134','BMu135','BMu136','BMu138',...
+                 'BMu146','BMu147','BMu148','BMu149','BMu150'};
 
 % Movement biomarkers
+
+% Biomarker dimensions : groupe x participant x session
+
+if contains(Participant.type,'Control')
+    iparticipant = 1;
+elseif contains(Participant.type,'Patient')
+    iparticipant = 1;
+end
 
 % BMo3
 % Sit to stand	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
 for i = 1:size(Trial,2)
     if contains(Trial(i).type,'S2S_Unconstrained')
-        % Right side
-        temp = [];
         for icycle = 1:size(Trial(i).Joint(4).Euler.rcycle,4)
-            temp = [temp max(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1) - ...
-                         min(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle),[],1)];
+            Biomarker.BMo3 max(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle)) - ...
+            min(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))
         end
-        Biomarker.BMo3(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
-        clear temp;
-        % Left side
-        temp = [];
-        for icycle = 1:size(Trial(i).Joint(9).Euler.rcycle,4)
-            temp = [temp max(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1) - ...
-                         min(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle),[],1)];
-        end
-        Biomarker.BMo3(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
-        clear temp;
     end
 end
-
-% BMo4
-% Stand to sit	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
-for i = 1:size(Trial,2)
-    if contains(Trial(i).type,'S2S_Unconstrained')
-        % Right side
-        temp = [];
-        for icycle = 1:size(Trial(i).Joint(4).Euler.lcycle,4)
-            temp = [temp max(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1) - ...
-                         min(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle),[],1)];
-        end
-        Biomarker.BMo4(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
-        clear temp;
-        % Left side
-        temp = [];
-        for icycle = 1:size(Trial(i).Joint(9).Euler.lcycle,4)
-            temp = [temp max(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1) - ...
-                         min(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle),[],1)];
-        end
-        Biomarker.BMo4(igroup,iparticipant,isession,2) = rad2deg(mean(temp));
-        clear temp;
-    end
-end
+Biomarker.BMo3.(Session.type(1:3)) = ;
 
 % Muscular activity biomarkers

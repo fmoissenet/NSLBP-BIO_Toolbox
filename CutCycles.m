@@ -134,6 +134,60 @@ if contains(Trial.type,'Gait')
                 clear temp;
             end
         end
+        
+        % Segment kinematics
+        for j = 1:size(Trial.Segment,2)
+            if ~isempty(Trial.Segment(j).T.smooth)
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).rM.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).rM.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).Q.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Q.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).T.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).T.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).Euler.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Euler.rcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Joint kinematics
+        for j = 1:size(Trial.Joint,2)
+            if ~isempty(Trial.Joint(j).T.smooth)
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).T.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).T.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).Euler.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).Euler.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).dj.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).dj.rcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
     end
     
     % Cut left gait cycles
@@ -171,17 +225,94 @@ if contains(Trial.type,'Gait')
                 clear temp;
             end
         end
+        
+        % GRF signals
+        for j = 1:size(Trial.GRF,2)
+            if ~isempty(Trial.GRF(j).Signal.P.smooth)
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.P.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.P.lcycle(:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.F.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.F.lcycle(:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.M.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.M.lcycle(:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Segment kinematics
+        for j = 1:size(Trial.Segment,2)
+            if ~isempty(Trial.Segment(j).T.smooth)
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).rM.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).rM.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).Q.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Q.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).T.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).T.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).Euler.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Euler.lcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Joint kinematics
+        for j = 1:size(Trial.Joint,2)
+            if ~isempty(Trial.Joint(j).T.smooth)
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).T.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).T.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).Euler.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).Euler.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).dj.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).dj.lcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
     end 
 
 % Other movements
 elseif contains(Trial.type,'S2S') || ...
-       contains(Trial.type,'Trunk_Forward') || ...
+       contains(Trial.type,'Trunk') || ...
+       contains(Trial.type,'Weight') || ...
        contains(Trial.type,'Perturbation')
 
-    % Identify cycles
+    % Identify rcycle, i.e. Part 1 of the full cycle (start to back)
     for i = 1:size(Trial.Event,2)
-        
-        % Part 1 of the full cycle (start to back)
         if contains(Trial.Event(i).label,'start')
             % Set temporal parameters
             kr = 1;
@@ -196,46 +327,51 @@ elseif contains(Trial.type,'S2S') || ...
             % Set temporal parameters
             kr = 1;
             for j = 1:size(Trial.Event(i).value,2)
-                % Markers
-                RCycle(kr).stop  = Trial.Event(i).value(j);
-                RCycle(kr).n     = RCycle(kr).stop-RCycle(kr).start+1;
-                RCycle(kr).k     = (1:RCycle(kr).n)';
-                RCycle(kr).k0    = (linspace(1,RCycle(kr).n,101))';
-                % Analogs
-                RCycle(kr).stopa = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
-                RCycle(kr).na    = RCycle(kr).stopa-RCycle(kr).starta+1;
-                RCycle(kr).ka    = (1:RCycle(kr).na)';
-                RCycle(kr).k0a   = (linspace(1,RCycle(kr).na,101))';
-                kr               = kr+1;
-            end    
-            
-        % Part 2 of the full cycle (start to back)
-        elseif contains(Trial.Event(i).label,'back')
-            % Set temporal parameters
-            kl = 1;
-            for j = 1:size(Trial.Event(i).value,2)
-                % Markers
-                LCycle(kl).start  = Trial.Event(i).value(j);
-                % Analogs
-                LCycle(kl).starta = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
-                kl                = kl+1;
-            end   
-        elseif contains(Trial.Event(i).label,'start')
+                if Trial.Event(i).value(j) > RCycle(kr).start
+                    % Markers
+                    RCycle(kr).stop  = Trial.Event(i).value(j);
+                    RCycle(kr).n     = RCycle(kr).stop-RCycle(kr).start+1;
+                    RCycle(kr).k     = (1:RCycle(kr).n)';
+                    RCycle(kr).k0    = (linspace(1,RCycle(kr).n,101))';
+                    % Analogs
+                    RCycle(kr).stopa = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
+                    RCycle(kr).na    = RCycle(kr).stopa-RCycle(kr).starta+1;
+                    RCycle(kr).ka    = (1:RCycle(kr).na)';
+                    RCycle(kr).k0a   = (linspace(1,RCycle(kr).na,101))';
+                    kr               = kr+1;
+                end
+            end
+        end
+    end
+    
+    % Identify lcycle, i.e. Part 2 of the full cycle (start to back)
+    for i = 1:size(Trial.Event,2)
+        if contains(Trial.Event(i).label,'start')
             % Set temporal parameters
             kl = 1;
             for j = 2:size(Trial.Event(i).value,2)
                 % Markers
                 LCycle(kl).stop  = Trial.Event(i).value(j);
+                % Analogs
+                LCycle(kl).stopa = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
+                kl               = kl+1;
+            end 
+        elseif contains(Trial.Event(i).label,'back')
+            % Set temporal parameters
+            kl = 1;
+            for j = 1:size(Trial.Event(i).value,2)
+                % Markers
+                LCycle(kl).start = Trial.Event(i).value(j);
                 LCycle(kl).n     = LCycle(kl).stop-LCycle(kl).start+1;
                 LCycle(kl).k     = (1:LCycle(kl).n)';
                 LCycle(kl).k0    = (linspace(1,LCycle(kl).n,101))';
                 % Analogs
-                LCycle(kl).stopa = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
-                LCycle(kl).na    = LCycle(kl).stopa-LCycle(kl).starta+1;
-                LCycle(kl).ka    = (1:LCycle(kl).na)';
-                LCycle(kl).k0a   = (linspace(1,LCycle(kl).na,101))';
-                kl               = kl+1;
-            end 
+                LCycle(kl).starta = Trial.Event(i).value(j)*Trial.fanalog/Trial.fmarker;
+                LCycle(kl).na     = LCycle(kl).stopa-LCycle(kl).starta+1;
+                LCycle(kl).ka     = (1:LCycle(kl).na)';
+                LCycle(kl).k0a    = (linspace(1,LCycle(kl).na,101))';
+                kl                = kl+1;
+            end  
         end
     end
     
@@ -297,6 +433,60 @@ elseif contains(Trial.type,'S2S') || ...
                 clear temp;
             end
         end
+        
+        % Segment kinematics
+        for j = 1:size(Trial.Segment,2)
+            if ~isempty(Trial.Segment(j).T.smooth)
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).rM.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).rM.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).Q.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Q.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).T.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).T.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Segment(j).Euler.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Euler.rcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Joint kinematics
+        for j = 1:size(Trial.Joint,2)
+            if ~isempty(Trial.Joint(j).T.smooth)
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).T.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).T.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).Euler.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).Euler.rcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(RCycle(i).k,...
+                               permute(Trial.Joint(j).dj.smooth(:,:,RCycle(i).start:RCycle(i).stop),[3,1,2]),...
+                               RCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).dj.rcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
     end
     
     % Cut left gait cycles
@@ -331,6 +521,84 @@ elseif contains(Trial.type,'S2S') || ...
                                LCycle(i).k0a,...
                                'spline');
                 Trial.EMG(j).Signal.lcyclen(:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % GRF signals
+        for j = 1:size(Trial.GRF,2)
+            if ~isempty(Trial.GRF(j).Signal.P.smooth)
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.P.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.P.lcycle(:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.F.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.F.lcycle(:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).ka,...
+                               Trial.GRF(j).Signal.M.smooth(LCycle(i).starta:LCycle(i).stopa,:),...
+                               LCycle(i).k0a,...
+                               'spline');
+                Trial.GRF(j).Signal.M.lcycle(:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Segment kinematics
+        for j = 1:size(Trial.Segment,2)
+            if ~isempty(Trial.Segment(j).T.smooth)
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).rM.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).rM.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).Q.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Q.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).T.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).T.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Segment(j).Euler.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Segment(j).Euler.lcycle(:,:,:,i) = temp;
+                clear temp;
+            end
+        end
+        
+        % Joint kinematics
+        for j = 1:size(Trial.Joint,2)
+            if ~isempty(Trial.Joint(j).T.smooth)
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).T.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).T.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).Euler.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).Euler.lcycle(:,:,:,i) = temp;
+                clear temp;
+                temp = interp1(LCycle(i).k,...
+                               permute(Trial.Joint(j).dj.smooth(:,:,LCycle(i).start:LCycle(i).stop),[3,1,2]),...
+                               LCycle(i).k0,...
+                               'spline');
+                Trial.Joint(j).dj.lcycle(:,:,:,i) = temp;
                 clear temp;
             end
         end
