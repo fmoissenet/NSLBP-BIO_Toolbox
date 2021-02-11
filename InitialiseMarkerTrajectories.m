@@ -111,6 +111,7 @@ for i = 1:length(markerSet)
         Trial.Marker(i).Trajectory.smooth = [];
         Trial.Marker(i).Trajectory.rcycle = [];
         Trial.Marker(i).Trajectory.lcycle = [];
+        Trial.Marker(i).Trajectory.units  = 'm';
         Trial.Marker(i).Trajectory.Gap    = [];
     else
         Trial.Marker(i).Trajectory.raw    = [];
@@ -118,6 +119,7 @@ for i = 1:length(markerSet)
         Trial.Marker(i).Trajectory.smooth = [];
         Trial.Marker(i).Trajectory.rcycle = [];
         Trial.Marker(i).Trajectory.lcycle = [];
+        Trial.Marker(i).Trajectory.units  = 'm';
         Trial.Marker(i).Trajectory.Gap    = [];
     end
     Trial.Marker(i).Processing.smooth     = 'none';

@@ -31,4 +31,5 @@ for i = 1:length(vmarkerLabels)
     Trial.Vmarker(i).Trajectory.smooth = [];
     Trial.Vmarker(i).Trajectory.rcycle = [];
     Trial.Vmarker(i).Trajectory.lcycle = [];
+    Trial.Vmarker(i).Trajectory.units  = 'm';
 end

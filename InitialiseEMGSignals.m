@@ -57,6 +57,7 @@ for i = 1:length(EMGSet)
         Trial.EMG(i).Signal.cyclen  = []; %norm
         Trial.EMG(i).Signal.rcyclen = []; %norm
         Trial.EMG(i).Signal.lcyclen = []; %norm
+        Trial.EMG(i).Signal.units   = 'V';
     else
         Trial.EMG(i).Signal.raw     = [];
         Trial.EMG(i).Signal.filt    = [];
@@ -69,6 +70,7 @@ for i = 1:length(EMGSet)
         Trial.EMG(i).Signal.cyclen  = []; %norm
         Trial.EMG(i).Signal.rcyclen = []; %norm
         Trial.EMG(i).Signal.lcyclen = []; %norm
+        Trial.EMG(i).Signal.units   = 'V';
     end
     Trial.EMG(i).Processing.filt       = 'none';
     Trial.EMG(i).Processing.smooth     = 'none';

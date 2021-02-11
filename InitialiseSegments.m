@@ -33,6 +33,7 @@ for i = 1:length(segmentLabels)
     Trial.Segment(i).rM.smooth    = [];
     Trial.Segment(i).rM.rcycle    = [];
     Trial.Segment(i).rM.lcycle    = [];
+    Trial.Segment(i).rM.units     = 'm';
     Trial.Segment(i).Q.smooth     = [];
     Trial.Segment(i).Q.rcycle     = [];
     Trial.Segment(i).Q.lcycle     = [];
@@ -42,5 +43,6 @@ for i = 1:length(segmentLabels)
     Trial.Segment(i).Euler.smooth = [];
     Trial.Segment(i).Euler.rcycle = [];
     Trial.Segment(i).Euler.lcycle = [];
+    Trial.Segment(i).Euler.units  = 'rad';
     Trial.Segment(i).sequence     = '';
 end

@@ -37,8 +37,10 @@ for i = 1:length(jointLabels)
     Trial.Joint(i).Euler.smooth = [];
     Trial.Joint(i).Euler.rcycle = [];
     Trial.Joint(i).Euler.lcycle = [];
+    Trial.Joint(i).Euler.units  = 'rad';
     Trial.Joint(i).dj.smooth    = [];
     Trial.Joint(i).dj.rcycle    = [];
     Trial.Joint(i).dj.lcycle    = [];
+    Trial.Joint(i).dj.units     = 'm';
     Trial.Joint(i).sequence     = '';
 end

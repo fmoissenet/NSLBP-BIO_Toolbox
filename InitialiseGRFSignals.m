@@ -26,15 +26,16 @@ if ~isempty(GRF)
     for i = 1:size(GRF,1)
         
         % Store plateforme corners location
-        Trial.GRF(i).label         = ['Forceplate_',num2str(i)];
-        Trial.GRF(i).side          = '';
-        Trial.GRF(i).cycle         = [];
-        Trial.GRF(i).Location      = [];
-        corners                    = GRFmeta.children.CORNERS.info.values(:,:,i);
-        Trial.GRF(i).Location.X(1) = min([corners(1,1) corners(1,2) corners(1,3) corners(1,4)])*1e-3; % Convert mm to m
-        Trial.GRF(i).Location.X(2) = max([corners(1,1) corners(1,2) corners(1,3) corners(1,4)])*1e-3; % Convert mm to m
-        Trial.GRF(i).Location.Y(1) = min([corners(2,1) corners(2,2) corners(2,3) corners(2,4)])*1e-3; % Convert mm to m
-        Trial.GRF(i).Location.Y(2) = max([corners(2,1) corners(2,2) corners(2,3) corners(2,4)])*1e-3; % Convert mm to m
+        Trial.GRF(i).label          = ['Forceplate_',num2str(i)];
+        Trial.GRF(i).side           = '';
+        Trial.GRF(i).cycle          = [];
+        Trial.GRF(i).Location       = [];
+        corners                     = GRFmeta.children.CORNERS.info.values(:,:,i);
+        Trial.GRF(i).Location.X(1)  = min([corners(1,1) corners(1,2) corners(1,3) corners(1,4)])*1e-3; % Convert mm to m
+        Trial.GRF(i).Location.X(2)  = max([corners(1,1) corners(1,2) corners(1,3) corners(1,4)])*1e-3; % Convert mm to m
+        Trial.GRF(i).Location.Y(1)  = min([corners(2,1) corners(2,2) corners(2,3) corners(2,4)])*1e-3; % Convert mm to m
+        Trial.GRF(i).Location.Y(2)  = max([corners(2,1) corners(2,2) corners(2,3) corners(2,4)])*1e-3; % Convert mm to m
+        Trial.GRF(i).Location.units = 'm';
         clear corners;
                 
         % Initialise CoP, force and moment
@@ -44,18 +45,21 @@ if ~isempty(GRF)
         Trial.GRF(i).Signal.P.cycle    = [];
         Trial.GRF(i).Signal.P.rcycle   = [];
         Trial.GRF(i).Signal.P.lcycle   = [];
+        Trial.GRF(i).Signal.P.units    = 'm';
         Trial.GRF(i).Signal.F.raw      = [];
         Trial.GRF(i).Signal.F.filt     = [];
         Trial.GRF(i).Signal.F.smooth   = [];
         Trial.GRF(i).Signal.F.cycle    = [];
         Trial.GRF(i).Signal.F.rcycle   = [];
         Trial.GRF(i).Signal.F.lcycle   = [];
+        Trial.GRF(i).Signal.F.units    = 'N';
         Trial.GRF(i).Signal.M.raw      = [];
         Trial.GRF(i).Signal.M.filt     = [];
         Trial.GRF(i).Signal.M.smooth   = [];
         Trial.GRF(i).Signal.M.cycle    = [];
         Trial.GRF(i).Signal.M.rcycle   = [];
         Trial.GRF(i).Signal.M.lcycle   = [];
+        Trial.GRF(i).Signal.M.units    = 'Nm';
         Trial.GRF(i).Processing.filt   = 'none';
         Trial.GRF(i).Processing.smooth = 'none';  
     end

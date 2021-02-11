@@ -31,6 +31,7 @@ for i = 1:length(EventSet)
     if isfield(Event,EventSet{i})
         Trial.Event(k).label = EventSet{i};
         Trial.Event(k).value = round(Event.(EventSet{i})*Trial.fmarker)-Trial.n0+1;
+        Trial.Event(k).units = 'frame';
         k                    = k+1;
     end
 end
