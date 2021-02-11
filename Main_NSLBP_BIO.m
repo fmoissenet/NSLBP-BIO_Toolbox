@@ -217,12 +217,13 @@ for i = 1:size(Trial,2)
         Trial(i)         = InitialiseSegments(Trial(i));
         Trial(i)         = InitialiseJoints(Trial(i));
         if isempty(strfind(Trial(i).type,'Endurance'))
-            Trial(i)          = DefineSegments(Participant,Trial(i));
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),2,5); % Right lower limb kinematic chain
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),7,10); % Left lower limb kinematic chain
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),10,13); % Pelvis/lumbar/thorax/head
-            Trial(i)          = Joint_Kinematics_FM(Trial(i),14,19); % Pelvis/lower lumbar/upper lumbar/lower thorax/upper thorax/head
-            Trial(i).Joint(5) = Trial(i).Joint(10); % Double pelvis/lumbar joint for indices coherence
+            Trial(i)            = DefineSegments(Participant,Trial(i));
+            Trial(i)            = ComputeKinematics(Trial(i),2,5); % Right lower limb kinematic chain
+            Trial(i)            = ComputeKinematics(Trial(i),7,10); % Left lower limb kinematic chain
+            Trial(i)            = ComputeKinematics(Trial(i),10,13); % Pelvis/lumbar/thorax/head
+            Trial(i)            = ComputeKinematics(Trial(i),14,19); % Pelvis/lower lumbar/upper lumbar/lower thorax/upper thorax/head
+            Trial(i).Joint(5)   = Trial(i).Joint(10); % Double pelvis/lumbar joint for indices coherence
+            Trial(i).Segment(5) = Trial(i).Segment(10); % Double pelvis segment for indices coherence
         end
         
         % Process EMG signals
@@ -361,8 +362,6 @@ end
 % Compute and store participant/session biomarkers
 % Biomarker dimensions : group x participant x session x side (dim 1 if
 % central biomarker, dim 2 if right/left biomarker)
-
-% Movement biomarkers
 
 % BMo3
 % Sit to stand	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
@@ -572,55 +571,274 @@ end
 disp('  - BMo25');
 for i = 1:size(Trial,2)
     if contains(Trial(i).type,'S2S_Unconstrained')
-        temp1 = [];
-        temp2 = [];
-        temp3 = [];
-        
-        atan(vel/ang)
+        phi1 = [];
+        phi2 = [];
+        phi3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            phi1 = [phi1 atan(gradient(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))];
+            phi2 = [phi2 atan(gradient(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))];
+            phi3 = [phi3 atan(gradient(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))];
+        end
+        relativePhase1 = mean(phi2-phi1,2);
+        relativePhase2 = mean(phi3-phi1,2);
+        Biomarker.BMo25.value(igroup,iparticipant,isession,1) = rad2deg(max(relativePhase1));
+        Biomarker.BMo25.value(igroup,iparticipant,isession,2) = rad2deg(max(relativePhase2));
+        Biomarker.BMo25.units                                 = '°deg';
+        clear phi1 phi2 phi3 relativePhase1 relativePhase2;        
     end
 end
 
-figure();
-for i = 1:101
-    % Stick figure
-    for j = 1:size(Trial(28).Marker,2)
-        if j == 1
-            sfig1 = subplot(1,3,1);
-            hold on;
-            view(90,0);
-            axis equal;
-            sfig2 = subplot(1,3,2);
-            hold on;
-            sfig3 = subplot(1,3,3);
-            hold on;
+% BMo26
+% Sit to stand	Lumbar/leg	Coordination	Lumbar/hip relative phase difference (mean)
+disp('  - BMo26');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        phi1 = [];
+        phi2 = [];
+        phi3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            phi1 = [phi1 atan(gradient(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))];
+            phi2 = [phi2 atan(gradient(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))];
+            phi3 = [phi3 atan(gradient(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))];
         end
-        if ~isempty(Trial(28).Marker(j).Trajectory.smooth)
-            subplot(1,3,1);
-            plot3(Trial(28).Marker(j).Trajectory.rcycle(i,1,1),...
-                  Trial(28).Marker(j).Trajectory.rcycle(i,2,1),...
-                  Trial(28).Marker(j).Trajectory.rcycle(i,3,1),...
-                  'Marker','o','Color','red');
-        end
+        relativePhase1 = mean(phi2-phi1,2);
+        relativePhase2 = mean(phi3-phi1,2);
+        Biomarker.BMo26.value(igroup,iparticipant,isession,1) = rad2deg(mean(relativePhase1));
+        Biomarker.BMo26.value(igroup,iparticipant,isession,2) = rad2deg(mean(relativePhase2));
+        Biomarker.BMo26.units                                 = '°deg';
+        clear phi1 phi2 phi3 relativePhase1 relativePhase2;        
     end
-    for j = 1:size(Trial(28).Vmarker,2)
-        subplot(1,3,1);
-        plot3(Trial(28).Vmarker(j).Trajectory.rcycle(i,1,1),...
-              Trial(28).Vmarker(j).Trajectory.rcycle(i,2,1),...
-              Trial(28).Vmarker(j).Trajectory.rcycle(i,3,1),...
-              'Marker','o','Color','blue');
-    end
-    % Variable
-    subplot(1,3,2);
-    ylim([-10,50]);
-%     title('Lumbopelvic angle');
-    plot(i,rad2deg(Trial(28).Joint(10).Euler.rcycle(i,:,1,1)),'Marker','x','Color','blue','Linestyle','-');
-    subplot(1,3,3);
-    ylim([-10,50]);
-%     title('Thoracopelvic angle');
-    plot(i,rad2deg(Trial(28).Joint(11).Euler.rcycle(i,:,1,1)),'Marker','x','Color','red','Linestyle','-');
-    
-    pause(0.01);
-%     cla(sfig1);
 end
 
-% Muscular activity biomarkers
+% BMo27
+% Stand to sit	Lumbar/leg	Coordination	Lumbar/hip relative phase difference (mean)
+disp('  - BMo27');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        phi1 = [];
+        phi2 = [];
+        phi3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.lcycle,4)
+            phi1 = [phi1 atan(gradient(Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle))./Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle))];
+            phi2 = [phi2 atan(gradient(Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle))./Trial(i).Joint(4).Euler.lcycle(:,:,1,icycle))];
+            phi3 = [phi3 atan(gradient(Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle))./Trial(i).Joint(9).Euler.lcycle(:,:,1,icycle))];
+        end
+        relativePhase1 = mean(phi2-phi1,2);
+        relativePhase2 = mean(phi3-phi1,2);
+        Biomarker.BMo27.value(igroup,iparticipant,isession,1) = rad2deg(mean(relativePhase1));
+        Biomarker.BMo27.value(igroup,iparticipant,isession,2) = rad2deg(mean(relativePhase2));
+        Biomarker.BMo27.units                                 = '°deg';
+        clear phi1 phi2 phi3 relativePhase1 relativePhase2;        
+    end
+end
+
+% BMo28
+% Sit to stand	Lumbar/leg	Coordination	Lumbar/hip relative phase difference (min)
+disp('  - BMo28');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        phi1 = [];
+        phi2 = [];
+        phi3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            phi1 = [phi1 atan(gradient(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle))];
+            phi2 = [phi2 atan(gradient(Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(4).Euler.rcycle(:,:,1,icycle))];
+            phi3 = [phi3 atan(gradient(Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))./Trial(i).Joint(9).Euler.rcycle(:,:,1,icycle))];
+        end
+        relativePhase1 = mean(phi2-phi1,2);
+        relativePhase2 = mean(phi3-phi1,2);
+        Biomarker.BMo28.value(igroup,iparticipant,isession,1) = rad2deg(min(relativePhase1));
+        Biomarker.BMo28.value(igroup,iparticipant,isession,2) = rad2deg(min(relativePhase2));
+        Biomarker.BMo28.units                                 = '°deg';
+        clear phi1 phi2 phi3 relativePhase1 relativePhase2;        
+    end
+end
+
+% BMo29
+% Trunk sagittal bending	Lumbar/pelvis	Coordination	Lumbar/pelvis absolute relative phase (mean)
+disp('  - BMo29');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        phi1 = [];
+        phi2 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            if abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,1),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,1),1))>0.1 % Y forward
+                ang1  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,2,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(11).Euler.rcycle(:,:,2,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel2/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+            elseif abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,2),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,2),1))>0.1 % X forward
+                ang1  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,1,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(11).Euler.rcycle(:,:,1,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel2/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+            end
+        end
+        relativePhase = mean(phi1-phi2,2);
+        MARP          = sum(abs(relativePhase),1)/101;
+        Biomarker.BMo29.value(igroup,iparticipant,isession,1) = rad2deg(MARP);
+        Biomarker.BMo29.units                                 = '°deg';
+        clear ang1 nang1 vel1 nvel1 ang2 nang2 vel2 nvel2 phi1 phi2 relativePhase MARP;  
+    end
+end
+
+% BMo30
+% Trunk sagittal bending	Lumbar/pelvis	Coordination	Lumbar/pelvis deviation phase (mean)
+disp('  - BMo30');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        phi1 = [];
+        phi2 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            if abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,1),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,1),1))>0.1 % Y forward
+                ang1  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,2,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(11).Euler.rcycle(:,:,2,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel2/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+            elseif abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,2),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,2),1))>0.1 % X forward
+                ang1  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,1,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(11).Euler.rcycle(:,:,1,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel2/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+            end
+        end
+        relativePhase = phi1-phi2;
+        DP            = sum(std(relativePhase,0,2),1)/101;
+        Biomarker.BMo30.value(igroup,iparticipant,isession,1) = rad2deg(DP);
+        Biomarker.BMo30.units                                 = '°deg';
+        clear ang1 nang1 vel1 nvel1 ang2 nang2 vel2 nvel2 phi1 phi2 relativePhase DP;  
+    end
+end
+
+% BMo33
+% Sit to stand	Lumbar/pelvis	Spatial/intensity	Lumbopelvic sagittal angle (rom)
+disp('  - BMo33');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            temp = [temp max(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle),[],1) - ...
+                         min(Trial(i).Joint(10).Euler.rcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo33.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo33.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo34
+% Stand to sit	Lumbar/pelvis	Spatial/intensity	Lumbopelvic sagittal angle (rom)
+disp('  - BMo34');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'S2S_Unconstrained')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.lcycle,4)
+            temp = [temp max(Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle),[],1) - ...
+                         min(Trial(i).Joint(10).Euler.lcycle(:,:,1,icycle),[],1)];
+        end
+        Biomarker.BMo34.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo34.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo37
+% Trunk sagittal bending	Pelvis	Spatial/intensity	Pelvis sagittal angle (max)
+disp('  - BMo37');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        temp = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            if abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,1),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,1),1))>0.1 % Y forward
+                value = pi/2-Trial(i).Segment(10).Euler.rcycle(:,1,2,icycle);
+                temp  = [temp max(value,[],1)-min(value,[],1)];
+                clear value;
+            elseif abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,2),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,2),1))>0.1 % X forward
+                value = pi/2-Trial(i).Segment(10).Euler.rcycle(:,1,1,icycle);
+                temp  = [temp max(value,[],1)-min(value,[],1)];
+                clear value;
+            end
+        end
+        Biomarker.BMo37.value(igroup,iparticipant,isession,1) = rad2deg(mean(temp));
+        Biomarker.BMo37.units                                 = '°deg';
+        clear temp;
+    end
+end
+
+% BMo42
+% Trunk sagittal bending	Lumbar/pelvis	Coordination	Lumbar/pelvis deviation phase (mean)
+disp('  - BMo42');
+for i = 1:size(Trial,2)
+    if contains(Trial(i).type,'Trunk_Forward')
+        phi1 = [];
+        phi2 = [];
+        phi3 = [];
+        for icycle = 1:size(Trial(i).Joint(10).Euler.rcycle,4)
+            if abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,1),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,1),1))>0.1 % Y forward
+                ang1  = pi/2-Trial(i).Segment(4).Euler.rcycle(:,:,2,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(9).Euler.rcycle(:,:,2,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel1/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+                ang3  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,2,icycle);
+                nang3 = 2*(ang2-min(ang3))-(max(ang3)-min(ang3))-1;
+                vel3  = gradient(ang3);
+                nvel3 = vel2/max(vel3);
+                phi3  = [phi3 atan(nvel3./nang3)];
+            elseif abs(mean(Trial(i).Marker(1).Trajectory.smooth(:,2),1)-mean(Trial(i).Marker(6).Trajectory.smooth(:,2),1))>0.1 % X forward
+                ang1  = pi/2-Trial(i).Segment(4).Euler.rcycle(:,:,1,icycle);
+                nang1 = 2*(ang1-min(ang1))-(max(ang1)-min(ang1))-1;
+                vel1  = gradient(ang1);
+                nvel1 = vel1/max(vel1);
+                phi1  = [phi1 atan(nvel1./nang1)];
+                ang2  = pi/2-Trial(i).Segment(9).Euler.rcycle(:,:,1,icycle);
+                nang2 = 2*(ang2-min(ang2))-(max(ang2)-min(ang2))-1;
+                vel2  = gradient(ang2);
+                nvel2 = vel1/max(vel2);
+                phi2  = [phi2 atan(nvel2./nang2)];
+                ang3  = pi/2-Trial(i).Segment(10).Euler.rcycle(:,:,1,icycle);
+                nang3 = 2*(ang2-min(ang3))-(max(ang3)-min(ang3))-1;
+                vel3  = gradient(ang3);
+                nvel3 = vel2/max(vel3);
+                phi3  = [phi3 atan(nvel3./nang3)];
+            end
+        end
+        relativePhase1 = phi1-phi3;
+        DP1            = sum(std(relativePhase1,0,2),1)/101;
+        relativePhase2 = phi2-phi3;
+        DP2            = sum(std(relativePhase2,0,2),1)/101;
+        Biomarker.BMo42.value(igroup,iparticipant,isession,1) = rad2deg(DP1);
+        Biomarker.BMo42.value(igroup,iparticipant,isession,2) = rad2deg(DP2);
+        Biomarker.BMo42.units                                 = '°deg';
+        clear ang1 nang1 vel1 nvel1 phi1 ang2 nang2 vel2 nvel2 phi2 ang3 nang3 vel3 nvel3 phi3 relativePhase1 relativePhase2 DP1 DP2;  
+    end
+end

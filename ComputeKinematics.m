@@ -20,7 +20,7 @@
 % Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 % -------------------------------------------------------------------------
 
-function Trial = Joint_Kinematics_FM(Trial,segment1,segment2)
+function Trial = ComputeKinematics(Trial,segment1,segment2)
 
 % Number of frames
 n = size(Trial.Segment(segment1).Q.smooth,3);
@@ -31,7 +31,7 @@ for i = segment1:segment2-1
     % Segment kinematics
     Trial.Segment(i).T.smooth     = Q2Tuv_array3(Trial.Segment(i).Q.smooth);
     if i == 5 || i == 10 || i == 11 || i == 12 || i == 13 || i == 14 || ...
-       i == 15 || i == 16 || i == 17 || i == 16
+       i == 15 || i == 16 || i == 17 || i == 18 || i == 19
         Trial.Segment(i).Euler.smooth = R2fixedYXZ_array3(Trial.Segment(i).T.smooth(1:3,1:3,:)); % (Wren and Mitiguy 2007)
         Trial.Segment(i).sequence     = 'YXZ';
     else
