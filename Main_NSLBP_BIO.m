@@ -250,7 +250,7 @@ for i = 1:size(Trial,2)
         smethod.type      = 'butterLow2';
         smethod.parameter = 50;
         [Trial(i),tGRF]   = ProcessGRFSignals(Session,Trial(i),GRF,tGRF,fmethod,smethod);
-        clear GRF fmethod smethod;
+        clear GRF GRFmeta fmethod smethod;
                 
         % Define additional events (for trials other than gait)
         % Crop raw files if needed to keep only wanted cycles
@@ -332,6 +332,7 @@ for i = 1:size(Trial,2)
         
     end
 end
+clear i j;
 
 % -------------------------------------------------------------------------
 % COMPUTE BIOMARKERS
@@ -360,8 +361,8 @@ elseif contains(Session.type,'FWP')
 end
 
 % Compute and store participant/session biomarkers
-% Biomarker dimensions : group x participant x session x side (dim 1 if
-% central biomarker, dim 2 if right/left biomarker)
+% Biomarker dimensions: group x participant x session x side 
+% side: size 1 if central biomarker, size 2 if right/left biomarker
 
 % BMo3
 % d410 "Changing basic body position" Sit to stand	Pelvis/leg	Spatial/intensity	Hip sagittal angle (rom)
